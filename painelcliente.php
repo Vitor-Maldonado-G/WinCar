@@ -1,8 +1,8 @@
 <?php
 session_start();
 
-// Trava de segurança: se não tiver a sessão ativa, manda de volta pro login
-if (!isset($_SESSION['id_cliente'])) {
+
+if (!isset($_SESSION['usuario_id'])) {
     header("Location: login.php");
     exit(); 
 }
@@ -29,7 +29,7 @@ $nome_cliente = isset($_SESSION['nome']) ? $_SESSION['nome'] : 'Cliente';
 
     <header class="cabecalho">
         <h2>WinCar</h2>
-        <a href="logout.php">Sair (Deslogar)</a>
+        <a href="logout.php">Sair</a>
     </header>
 
     <div class="container">
