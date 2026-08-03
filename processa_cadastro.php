@@ -6,7 +6,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Recebe os dados do formulário
     $nome  = trim($_POST['nome']);
     $email = trim($_POST['email']);
-    $placa = trim($_POST['placa']); // Caso queira guardar a placa ou telefone
+    $telefone = $_POST['telefone']; // Caso queira guardar a placa ou telefone
     $senha = $_POST['senha'];
 
     // Criptografa a senha
@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Associa as variáveis
         $stmt->bindParam(':nome', $nome);
         $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':telefone', $placa); // usando o campo placa como telefone/identificador por enquanto
+        $stmt->bindParam(':telefone', $telefone); // usando o campo placa como telefone/identificador por enquanto
         $stmt->bindParam(':senha', $senhaHash);
 
         if ($stmt->execute()) {
