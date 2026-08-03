@@ -5,7 +5,7 @@
         <div class="card bg-primary text-white shadow border-0">
             <div class="card-body p-4">
                 
-                <h3 class="card-title text-center mb-4 fw-bold">Criar sua Conta 🚗</h3>
+                <h3 class="card-title text-center mb-4 fw-bold">Criar sua Conta</h3>
                 
                 <form action="processa_cadastro.php" method="POST">
                     
@@ -15,13 +15,22 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="email" class="form-label">E-mail</label>
-                        <input type="email" class="form-control" id="email" name="email" placeholder="seu@email.com" required>
+                        <label for="telefone" class="form-label">Telefone / WhatsApp</label>
+                        <input 
+                            type="text" 
+                            class="form-control" 
+                            id="telefone" 
+                            name="telefone" 
+                            placeholder="(11) 99999-9999" 
+                            maxlength="15"
+                            oninput="mascaraTelefone(this)"
+                            required
+                        >
                     </div>
 
                     <div class="mb-3">
-                        <label for="placa" class="form-label">Placa do Veículo</label>
-                        <input type="text" class="form-control" id="placa" name="placa" placeholder="ABC1D23 ou ABC-1234" required>
+                        <label for="email" class="form-label">E-mail</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="seu@email.com" required>
                     </div>
 
                     <div class="mb-4">
@@ -45,5 +54,23 @@
         </div>
     </div>
 </div>
+
+<script>
+function mascaraTelefone(input) {
+    let v = input.value;
+    
+    // Remove tudo o que não for dígito
+    v = v.replace(/\D/g, "");
+    
+    // Coloca parênteses em volta dos dois primeiros dígitos (DDD)
+    v = v.replace(/^(\d{2})(\d)/g, "($1) $2");
+    
+    // Coloca hífen entre o quinto e o sexto dígitos (para celular de 9 dígitos)
+    v = v.replace(/(\d{5})(\d)/, "$1-$2");
+    
+    // Limita o tamanho ao padrão (11) 99999-9999
+    input.value = v.substring(0, 15);
+}
+</script>
 
 <?php include 'includes/footer.php'; ?>

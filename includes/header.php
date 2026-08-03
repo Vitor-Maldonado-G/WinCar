@@ -1,3 +1,8 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -16,10 +21,37 @@
       WinCar
     </a>
 
-    <div class="ms-auto d-flex gap-2">
-      <a class="btn btn-outline-light" href="login.php">Entrar</a>
-      <a class="btn btn-primary" href="cadastro.php">Cadastrar</a>
-    </div>
+   <div class="d-flex align-items-center gap-3 ms-auto">
+
+    <?php if (isset($_SESSION['usuario_nome'])): ?>
+        
+        <?php 
+            $nomeCompleto = $_SESSION['usuario_nome'];
+            $primeiroNome = explode(' ', trim($nomeCompleto))[0];
+        ?>
+
+        <div class="dropdown">
+            <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
+                <img src="assets/img/user.png" alt="Perfil" width="32" height="32" class="rounded-circle me-2 border border-white">
+                <span class="fw-semibold">Olá, <?php echo htmlspecialchars($primeiroNome); ?>!</span>
+            </a>
+
+            <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="dropdownUser">
+                <li><a class="dropdown-item" href="painel-cliente.php">Meus Agendamentos</a></li>
+                <li><a class="dropdown-item" href="agendar.php">Novo Agendamento</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-danger fw-bold" href="logout.php">Sair</a></li>
+            </ul>
+        </div>
+
+    <?php else: ?>
+
+        <a href="login.php" class="btn btn-outline-light me-2">Entrar</a>
+        <a href="cadastro.php" class="btn btn-primary fw-bold">Cadastrar</a>
+
+    <?php endif; ?>
+
+    </div>  
 
   </div>
 </nav>
