@@ -1,48 +1,159 @@
 <?php
 session_start();
 
-
-if (!isset($_SESSION['usuario_id'])) {
+// Proteção da página: só entra se estiver logado
+if (!isset($_SESSION['usuario_id']) && !isset($_SESSION['id_cliente'])) {
     header("Location: login.php");
-    exit(); 
+    exit();
 }
 
-$nome_cliente = isset($_SESSION['nome']) ? $_SESSION['nome'] : 'Cliente';
+require_once 'config/conexao.php';
+
+$id_cliente = $_SESSION['usuario_id'] ?? $_SESSION['id_cliente'];
+
+// 1. Busca os dados cadastrais do cliente
+try {
+    // Ajuste os nomes dos campos/tabela se no seu banco for 'usuario' ou 'cliente'
+    $sqlCliente = "SELECT nome, email, telefone FROM cliente WHERE id_cliente = :id_cliente";
+    $stmtCliente = $conexao->prepare($sqlCliente);
+    $stmtCliente->bindParam(':id_cliente', $id_cliente);
+    $stmtCliente->execute();
+    $cliente = $stmtCliente->fetch(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    $cliente = null;
+}
+
+// 2. Busca os agendamentos do cliente logado + o nome do serviço
+try {
+    $sqlAgendamentos = "SELECT a.*, s.nome AS nome_servico, s.preco 
+                        FROM agendamento a
+                        INNER JOIN servico s ON a.id_servico = s.id_servico
+                        WHERE a.id_cliente = :id_cliente
+                        ORDER BY a.data DESC, a.hora DESC";
+
+    $stmtAgendamentos = $conexao->prepare($sqlAgendamentos);
+    $stmtAgendamentos->bindParam(':id_cliente', $id_cliente);
+    $stmtAgendamentos->execute();
+    $meus_agendamentos = $stmtAgendamentos->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    $meus_agendamentos = [];
+}
+
+include 'includes/header.php';
 ?>
 
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel do Cliente - WinCar</title>
-    <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f9; margin: 0; padding: 0; }
-        .cabecalho { background-color: #2c3e50; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
-        .cabecalho a { color: #e74c3c; text-decoration: none; font-weight: bold; }
-        .container { max-width: 800px; margin: 40px auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-        .btn { display: inline-block; background-color: #2980b9; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; margin-top: 20px; }
-        .btn:hover { background-color: #3498db; }
-    </style>
-</head>
-<body>
-
-    <header class="cabecalho">
-        <h2>WinCar</h2>
-        <a href="logout.php">Sair</a>
-    </header>
-
-    <div class="container">
-        <h1>Bem-vindo, <?php echo htmlspecialchars($nome_cliente); ?>!</h1>
-        <p>Este é o seu painel de controle. Aqui você poderá gerenciar os serviços do seu veículo.</p>
-        
-        <hr>
-
-        <h3>Seus Agendamentos</h3>
-        <p>Você ainda não possui serviços agendados.</p>
-
-        <a href="agendamento.php" class="btn">Fazer Novo Agendamento</a>
+<div class="container my-5">
+    
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
+        <div>
+            <h1 class="fw-bold text-primary mb-1">Esse é o seu painel</h1>
+            <p class="text-secondary fs-5 mb-0">Aqui você pode ver seus agendamentos e realizar outros</p>
+        </div>
+        <a href="agendar.php" class="btn btn-primary btn-lg rounded-pill shadow-sm fw-bold">
+            + Novo Agendamento
+        </a>
     </div>
 
-</body>
-</html>
+    <?php if ($cliente): ?>
+        <div class="card shadow-sm border-0 rounded-4 mb-4 bg-light">
+            <div class="card-body p-4">
+                <h5 class="fw-bold text-dark mb-3">Minhas Informações</h5>
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <span class="text-muted d-block small">Nome:</span>
+                        <strong class="fs-6 text-dark"><?php echo htmlspecialchars($cliente['nome'] ?? 'Não informado'); ?></strong>
+                    </div>
+                    <div class="col-md-4">
+                        <span class="text-muted d-block small">E-mail:</span>
+                        <strong class="fs-6 text-dark"><?php echo htmlspecialchars($cliente['email'] ?? 'Não informado'); ?></strong>
+                    </div>
+                    <div class="col-md-4">
+                        <span class="text-muted d-block small">Telefone:</span>
+                        <strong class="fs-6 text-dark"><?php echo htmlspecialchars($cliente['telefone'] ?? 'Não informado'); ?></strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <?php endif; ?>
+
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-body p-4">
+            <h5 class="fw-bold text-primary mb-3">Seus Agendamentos</h5>
+            
+            <?php if (empty($meus_agendamentos)): ?>
+                <div class="text-center py-5">
+                    <h5 class="text-muted mb-3">Você ainda não possui nenhum agendamento.</h5>
+                    <a href="agendar.php" class="btn btn-outline-primary rounded-pill fw-bold">Agendar meu primeiro serviço</a>
+                </div>
+            <?php else: ?>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Veículo</th>
+                                <th>Placa</th>
+                                <th>Serviço</th>
+                                <th>Data</th>
+                                <th>Horário</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($meus_agendamentos as $agendamento): ?>
+                                <tr>
+                                    <td class="fw-bold text-dark">
+                                        <?php echo htmlspecialchars($agendamento['modelo']); ?>
+                                    </td>
+
+                                    <td>
+                                        <span class="badge bg-secondary text-uppercase fs-6">
+                                            <?php echo htmlspecialchars($agendamento['placa']); ?>
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <?php echo htmlspecialchars($agendamento['nome_servico']); ?>
+                                        <br>
+                                        <small class="text-muted">
+                                            R$ <?php echo number_format($agendamento['preco'], 2, ',', '.'); ?>
+                                        </small>
+                                    </td>
+
+                                    <td>
+                                        <?php echo date('d/m/Y', strtotime($agendamento['data'])); ?>
+                                    </td>
+
+                                    <td>
+                                        <?php echo date('H:i', strtotime($agendamento['hora'])); ?>
+                                    </td>
+
+                                    <td>
+                                        <?php
+                                            $status = $agendamento['status'];
+                                            $badgeClass = 'bg-warning text-dark';
+
+                                            if ($status == 'Confirmado') {
+                                                $badgeClass = 'bg-info text-white';
+                                            } elseif ($status == 'Concluido') {
+                                                $badgeClass = 'bg-success text-white';
+                                            } elseif ($status == 'Cancelado') {
+                                                $badgeClass = 'bg-danger text-white';
+                                            }
+                                        ?>
+                                        <span class="badge <?php echo $badgeClass; ?> px-3 py-2 rounded-pill fs-6">
+                                            <?php echo htmlspecialchars($status); ?>
+                                        </span>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            <?php endif; ?>
+
+        </div>
+    </div>
+
+</div>
+
+<?php include 'includes/footer.php'; ?>
