@@ -17,7 +17,7 @@ include 'includes/header.php';
 
 
 <div class="text-center mb-4 container">
-    <h1 class="display-4 fw-bold text-primary">Bem-vindo ao WinCar :p</h1>
+    <h1 class="display-4 fw-bold text-primary">Bem-vindo ao WinCar!</h1>
     <p class="lead text-muted">O melhor sistema de agendamento para o seu veículo.</p>
 </div>
 
