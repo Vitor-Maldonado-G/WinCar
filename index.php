@@ -1,4 +1,20 @@
-<?php include 'includes/header.php'; ?>
+<?php
+session_start();
+
+// Conexão com o banco de dados
+require_once 'config/conexao.php';
+
+// Busca a lista de serviços ativos no banco
+try {
+    $stmt = $conexao->query("SELECT * FROM servico");
+    $servicos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    $servicos = [];
+}
+
+include 'includes/header.php';
+?>
+
 
 <div class="text-center mb-4 container">
     <h1 class="display-4 fw-bold text-primary">Bem-vindo ao WinCar!</h1>
@@ -51,5 +67,56 @@
     </button>
 
 </div>
+
+<section class="container my-5">
+    
+    <div class="text-center mb-5">
+        <h2 class="fw-bold text-primary">Nossos Serviços</h2>
+        <p class="text-muted fs-5">Confira o que oferecemos para deixar seu veículo novo em folha</p>
+    </div>
+
+    <div class="row g-4">
+        
+        <?php if (!empty($servicos)): ?>
+            <?php foreach ($servicos as $servico): ?>
+                <div class="col-12 col-md-4">
+                    <div class="card h-100 shadow-sm border-0 rounded-4 overflow-hidden card-servico">
+                        
+                        <img 
+                            src="assets/img/<?php echo !empty($servico['imagem']) ? $servico['imagem'] : 'servico-padrao.jpg'; ?>" 
+                            class="card-img-top img-fluid" 
+                            alt="<?php echo htmlspecialchars($servico['nome']); ?>"
+                            style="height: 200px; object-fit: cover;">
+                        
+                        <div class="card-body d-flex flex-column p-4">
+                            <h4 class="card-title fw-bold text-dark mb-2">
+                                <?php echo htmlspecialchars($servico['nome']); ?>
+                            </h4>
+                            
+                            <p class="card-text text-secondary mb-4 flex-grow-1">
+                                <?php echo htmlspecialchars($servico['descricao'] ?? 'Serviço automotivo completo com a qualidade WinCar.'); ?>
+                            </p>
+
+                            <div class="d-flex justify-content-between align-items-center mt-auto pt-3 border-top">
+                                <span class="fs-4 fw-bold text-primary">
+                                    R$ <?php echo number_format($servico['preco'], 2, ',', '.'); ?>
+                                </span>
+                                <a href="agendar.php" class="btn btn-outline-primary rounded-pill fw-bold">
+                                    Agendar
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <div class="col-12 text-center py-4">
+                <p class="text-muted">Nenhum serviço cadastrado no momento.</p>
+            </div>
+        <?php endif; ?>
+
+    </div>
+</section>
 
 <?php include 'includes/footer.php'; ?>

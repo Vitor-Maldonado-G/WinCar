@@ -3,6 +3,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -37,7 +38,7 @@ if (session_status() === PHP_SESSION_NONE) {
             </a>
 
             <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="dropdownUser">
-                <li><a class="dropdown-item" href="painel-cliente.php">Meus Agendamentos</a></li>
+                <li><a class="dropdown-item" href="painelcliente.php">Meus Agendamentos</a></li>
                 <li><a class="dropdown-item" href="agendar.php">Novo Agendamento</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item text-danger fw-bold" href="logout.php">Sair</a></li>
