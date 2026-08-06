@@ -25,7 +25,7 @@ include 'includes/header.php';
                 
                 <h3 class="card-title text-center mb-4 fw-bold">Criar sua Conta</h3>
                 
-                <form action="processa_cadastro.php" method="POST" id="formCadastro">
+                <form action="processa_cadastro.php" method="POST" id="formCadastro" novalidate>
                     
                     <div class="mb-3">
                         <label for="nome" class="form-label">Nome Completo</label>
@@ -54,22 +54,26 @@ include 'includes/header.php';
                     <div class="mb-3">
                         <label for="senha" class="form-label fw-bold text-white">Senha</label>
                         <div class="input-group has-validation">
-                        <input type="password" 
-                            class="form-control" 
-                            id="senha" 
-                            name="senha" 
-                            placeholder="Crie uma senha forte" 
-                            minlength="6"
-                            required>
-                        <button class="btn btn-outline-light" type="button" onclick="alternarSenha('senha', this)">
-                            <i class="bi bi-eye"></i>
-                        </button>
-                        <div class="invalid-feedback">
-                            A senha precisa de no mínimo 6 caracteres, 1 letra maiúscula e 1 número.
+                            <input type="password" 
+                                class="form-control" 
+                                id="senha" 
+                                name="senha" 
+                                placeholder="Crie uma senha forte" 
+                                minlength="6"
+                                required>
+                            <button class="btn btn-outline-light" type="button" onclick="alternarSenha('senha', this)">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                            <div class="invalid-feedback">
+                                A senha precisa de no mínimo 6 caracteres, 1 letra maiúscula e 1 número.
+                            </div>
+                        </div>
+                        <div class="form-text text-light opacity-75">
+                            A senha deve ter no mínimo 6 caracteres, contendo pelo menos 1 letra maiúscula e 1 número.
                         </div>
                     </div>
 
-                    <div class="d-grid">
+                    <div class="d-grid mt-4">
                         <button type="submit" class="btn btn-light text-primary fw-bold btn-lg">Cadastrar</button>
                     </div>
 

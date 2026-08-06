@@ -23,7 +23,7 @@ include 'includes/header.php';
         <div class="card-body p-4 p-md-5">
             <h2 class="text-center fw-bold text-primary mb-4">Agendar Serviço</h2>
 
-            <form action="processa_agendamento.php" method="POST" id="formAgendamento" onsubmit="return validarFormulario()">
+            <form action="processa_agendamento.php" method="POST" id="formAgendamento" onsubmit="return validarFormulario()" novalidate>
                 
                 <div class="mb-3">
                     <label for="modelo" class="form-label fw-bold">Modelo do Veículo</label>
