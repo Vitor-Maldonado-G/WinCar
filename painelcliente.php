@@ -2,18 +2,17 @@
 session_start();
 
 // Proteção da página: só entra se estiver logado
-if (!isset($_SESSION['usuario_id']) && !isset($_SESSION['id_cliente'])) {
+if (!isset($_SESSION['usuario_id']) && !isset($_SESSION['usuario_id'])) {
     header("Location: login.php");
     exit();
 }
 
 require_once 'config/conexao.php';
 
-$id_cliente = $_SESSION['usuario_id'] ?? $_SESSION['id_cliente'];
+$id_cliente = $_SESSION['usuario_id'] ?? $_SESSION['usuario_id'];
 
 // 1. Busca os dados cadastrais do cliente
 try {
-    // Ajuste os nomes dos campos/tabela se no seu banco for 'usuario' ou 'cliente'
     $sqlCliente = "SELECT nome, email, telefone FROM cliente WHERE id_cliente = :id_cliente";
     $stmtCliente = $conexao->prepare($sqlCliente);
     $stmtCliente->bindParam(':id_cliente', $id_cliente);
@@ -44,6 +43,17 @@ include 'includes/header.php';
 
 <div class="container my-5">
     
+    <?php if (isset($_SESSION['mensagem'])): ?>
+        <div class="alert alert-<?php echo $_SESSION['tipo_mensagem']; ?> alert-dismissible fade show rounded-4 mb-4" role="alert">
+            <?php 
+                echo $_SESSION['mensagem']; 
+                unset($_SESSION['mensagem']);
+                unset($_SESSION['tipo_mensagem']);
+            ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <?php endif; ?>
+
     <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
         <div>
             <h1 class="fw-bold text-primary mb-1">Esse é o seu painel</h1>
@@ -96,6 +106,7 @@ include 'includes/header.php';
                                 <th>Data</th>
                                 <th>Horário</th>
                                 <th>Status</th>
+                                <th class="text-center">Ação</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -134,7 +145,7 @@ include 'includes/header.php';
 
                                             if ($status == 'Confirmado') {
                                                 $badgeClass = 'bg-info text-white';
-                                            } elseif ($status == 'Concluido') {
+                                            } elseif ($status == 'Concluido' || $status == 'Concluído') {
                                                 $badgeClass = 'bg-success text-white';
                                             } elseif ($status == 'Cancelado') {
                                                 $badgeClass = 'bg-danger text-white';
@@ -144,6 +155,19 @@ include 'includes/header.php';
                                             <?php echo htmlspecialchars($status); ?>
                                         </span>
                                     </td>
+
+                                    <td class="text-center">
+                                        <?php if ($agendamento['status'] != 'Cancelado' && $agendamento['status'] != 'Concluido' && $agendamento['status'] != 'Concluído'): ?>
+                                            <a href="cancelar.php?id=<?php echo $agendamento['id_agendamento']; ?>" 
+                                               class="btn btn-sm btn-outline-danger rounded-pill px-3 fw-bold"
+                                               onclick="return confirm('Tem certeza que deseja cancelar este agendamento?');">
+                                                Cancelar
+                                            </a>
+                                        <?php else: ?>
+                                            <span class="text-muted small">-</span>
+                                        <?php endif; ?>
+                                    </td>
+
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>

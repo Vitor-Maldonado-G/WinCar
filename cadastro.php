@@ -1,4 +1,22 @@
-<?php include 'includes/header.php'; ?>
+<?php 
+session_start();
+include 'includes/header.php'; 
+?>
+
+<?php if (isset($_SESSION['mensagem'])): ?>
+    <div class="row justify-content-center w-100 m-0 my-3">
+        <div class="col-md-6 col-lg-5">
+            <div class="alert alert-<?php echo $_SESSION['tipo_mensagem']; ?> alert-dismissible fade show shadow-sm rounded-3" role="alert">
+                <?php 
+                    echo $_SESSION['mensagem']; 
+                    unset($_SESSION['mensagem']);
+                    unset($_SESSION['tipo_mensagem']);
+                ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
 
 <div class="row justify-content-center w-100 m-0">
     <div class="col-md-6 col-lg-5">
@@ -7,7 +25,7 @@
                 
                 <h3 class="card-title text-center mb-4 fw-bold">Criar sua Conta</h3>
                 
-                <form action="processa_cadastro.php" method="POST">
+                <form action="processa_cadastro.php" method="POST" id="formCadastro">
                     
                     <div class="mb-3">
                         <label for="nome" class="form-label">Nome Completo</label>
@@ -33,9 +51,18 @@
                         <input type="email" class="form-control" id="email" name="email" placeholder="seu@email.com" required>
                     </div>
 
-                    <div class="mb-4">
-                        <label for="senha" class="form-label">Senha</label>
-                        <input type="password" class="form-control" id="senha" name="senha" placeholder="Crie uma senha forte" required>
+                    <div class="mb-3">
+                        <label for="senha" class="form-label fw-bold text-white">Senha</label>
+                        <input type="password" 
+                            class="form-control" 
+                            id="senha" 
+                            name="senha" 
+                            placeholder="Crie uma senha forte" 
+                            minlength="6"
+                            required>
+                        <div class="form-text text-light opacity-75">
+                            A senha deve ter no mínimo 6 caracteres, contendo pelo menos 1 letra maiúscula e 1 número.
+                        </div>
                     </div>
 
                     <div class="d-grid">
@@ -56,21 +83,32 @@
 </div>
 
 <script>
+// Máscara para o Telefone
 function mascaraTelefone(input) {
     let v = input.value;
-    
-    // Remove tudo o que não for dígito
-    v = v.replace(/\D/g, "");
-    
-    // Coloca parênteses em volta dos dois primeiros dígitos (DDD)
-    v = v.replace(/^(\d{2})(\d)/g, "($1) $2");
-    
-    // Coloca hífen entre o quinto e o sexto dígitos (para celular de 9 dígitos)
-    v = v.replace(/(\d{5})(\d)/, "$1-$2");
-    
-    // Limita o tamanho ao padrão (11) 99999-9999
+    v = v.replace(/\D/g, ""); // Remove não dígitos
+    v = v.replace(/^(\d{2})(\d)/g, "($1) $2"); // DDD
+    v = v.replace(/(\d{5})(\d)/, "$1-$2"); // Hífen no celular
     input.value = v.substring(0, 15);
 }
+
+// Validação de Senha Forte
+function validarSenha(senha) {
+    // Regex: mín 6 chars, pelo menos 1 maiúscula (?=.*[A-Z]), pelo menos 1 número (?=.*\d)
+    const regexSenha = /^(?=.*[A-Z])(?=.*\d).{6,}$/;
+    return regexSenha.test(senha);
+}
+
+// Intercepta o envio do formulário
+document.getElementById('formCadastro').addEventListener('submit', function(e) {
+    const senha = document.getElementById('senha').value;
+    
+    if (!validarSenha(senha)) {
+        e.preventDefault(); // Impede o envio do formulário
+        alert('A senha deve ter no mínimo 6 caracteres, incluindo pelo menos uma letra maiúscula e um número!');
+        document.getElementById('senha').focus();
+    }
+});
 </script>
 
 <?php include 'includes/footer.php'; ?>

@@ -11,48 +11,66 @@ if (session_status() === PHP_SESSION_NONE) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WinCar - Sistema de Agendamento</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/estilo.css" rel="stylesheet">
 </head>
+
 <body class="d-flex flex-column min-vh-100 bg-light">
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
-    
-    <a class="navbar-brand fw-bold d-flex align-items-center" href="index.php">
+
+    <span class="navbar-brand fw-bold d-flex align-items-center">
       <img src="assets/img/logowincar.png" alt="WinCar Logo" height="40" class="me-2">
       WinCar
-    </a>
+    </span>
 
-   <div class="d-flex align-items-center gap-3 ms-auto">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarWinCar" aria-controls="navbarWinCar" aria-expanded="false" aria-label="Alternar navegação">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-    <?php if (isset($_SESSION['usuario_nome'])): ?>
-        
-        <?php 
-            $nomeCompleto = $_SESSION['usuario_nome'];
-            $primeiroNome = explode(' ', trim($nomeCompleto))[0];
-        ?>
+    <div class="collapse navbar-collapse" id="navbarWinCar">
 
-        <div class="dropdown">
-            <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="assets/img/user.png" alt="Perfil" width="32" height="32" class="rounded-circle me-2 border border-white">
-                <span class="fw-semibold">Olá, <?php echo htmlspecialchars($primeiroNome); ?>!</span>
-            </a>
+      <ul class="navbar-nav flex-lg-row gap-lg-3 mx-lg-4">
+        <li class="nav-item">
+          <a class="nav-link text-white fw-bold fs-5" href="index.php">Tela inicial</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white fw-bold fs-5" href="sobrenos.php">Sobre nós</a>
+        </li>
+      </ul>
 
-            <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="dropdownUser">
-                <li><a class="dropdown-item" href="painelcliente.php">Meus Agendamentos</a></li>
-                <li><a class="dropdown-item" href="agendar.php">Novo Agendamento</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item text-danger fw-bold" href="logout.php">Sair</a></li>
-            </ul>
-        </div>
+      <div class="d-flex flex-column flex-lg-row align-items-lg-center gap-3 ms-lg-auto mt-3 mt-lg-0">
 
-    <?php else: ?>
+        <?php if (isset($_SESSION['usuario_nome'])): ?>
+            <?php 
+                $nomeCompleto = $_SESSION['usuario_nome'];
+                $primeiroNome = explode(' ', trim($nomeCompleto))[0];
+            ?>
 
-        <a href="login.php" class="btn btn-outline-light me-2">Entrar</a>
-        <a href="cadastro.php" class="btn btn-primary fw-bold">Cadastrar</a>
+            <div class="dropdown">
+                <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="assets/img/user.png" alt="Perfil" width="32" height="32" class="rounded-circle me-2 border border-white">
+                    <span class="fw-semibold">Olá, <?php echo htmlspecialchars($primeiroNome); ?>!</span>
+                </a>
 
-    <?php endif; ?>
+                <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="dropdownUser">
+                    <li><a class="dropdown-item" href="painelcliente.php">Meus Agendamentos</a></li>
+                    <li><a class="dropdown-item" href="agendar.php">Novo Agendamento</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item text-danger fw-bold" href="logout.php">Sair</a></li>
+                </ul>
+            </div>
 
-    </div>  
+        <?php else: ?>
+
+            <a href="login.php" class="btn btn-outline-light me-2">Entrar</a>
+            <a href="cadastro.php" class="btn btn-primary fw-bold">Cadastrar</a>
+
+        <?php endif; ?>
+
+      </div>
+
+    </div>
 
   </div>
 </nav>

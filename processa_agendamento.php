@@ -19,7 +19,7 @@ function emitirAlerta($mensagem, $urlDestino = null) {
 }
 
 // 1. Verifica se o usuário está logado pegando o ID da sessão
-$id_cliente = $_SESSION['usuario_id'] ?? $_SESSION['id_cliente'] ?? null;
+$id_cliente = $_SESSION['usuario_id'] ?? $_SESSION['usuario_id'] ?? null;
 
 if (!$id_cliente) {
     emitirAlerta("Erro de autenticação! Faça login para agendar um serviço.", "login.php");
