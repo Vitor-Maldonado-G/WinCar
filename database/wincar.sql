@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 03/08/2026 às 21:08
+-- Tempo de geração: 07/08/2026 às 00:59
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -54,13 +54,6 @@ CREATE TABLE `cliente` (
   `tipo_usuario` enum('admin','cliente') DEFAULT 'cliente'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Despejando dados para a tabela `cliente`
---
-
-INSERT INTO `cliente` (`id_cliente`, `nome`, `email`, `telefone`, `senha`, `tipo_usuario`) VALUES
-(7, 'Emanuel trueadam', 'emanuelteste@gmail.com', '(11) 99999-9999', '$2y$10$3IxkNX0tDIZboIZiR1suoetg2/6NDowQ8RDaqY.GKBI2vERDhvR8O', 'cliente');
-
 -- --------------------------------------------------------
 
 --
@@ -72,18 +65,19 @@ CREATE TABLE `servico` (
   `nome` varchar(100) NOT NULL,
   `descricao` text DEFAULT NULL,
   `preco` varchar(30) NOT NULL,
-  `duracao` int(11) NOT NULL
+  `duracao` int(11) NOT NULL,
+  `imagem` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Despejando dados para a tabela `servico`
 --
 
-INSERT INTO `servico` (`id_servico`, `nome`, `descricao`, `preco`, `duracao`) VALUES
-(1, 'Lavagem Simples', 'Lavagem externa do veículo.', '40.00', 60),
-(2, 'Lavagem Completa', 'Lavagem interna e externa.', '80.00', 120),
-(3, 'Polimento', 'Polimento da pintura do veículo.', '250.00', 240),
-(4, 'Lavagem de Motor', 'Limpeza do compartimento do motor.', '70.00', 90);
+INSERT INTO `servico` (`id_servico`, `nome`, `descricao`, `preco`, `duracao`, `imagem`) VALUES
+(1, 'Lavagem Simples', 'Lavagem externa do veículo.', '40.00', 60, 'lavando1.jpg'),
+(2, 'Lavagem Completa', 'Lavagem interna e externa.', '80.00', 120, 'lavando2.jpg'),
+(3, 'Polimento', 'Polimento da pintura do veículo.', '250.00', 240, 'polimento1.jpg'),
+(4, 'Lavagem de Motor', 'Limpeza do compartimento do motor.', '70.00', 90, 'lavagemmotor1.webp');
 
 --
 -- Índices para tabelas despejadas
@@ -119,13 +113,13 @@ ALTER TABLE `servico`
 -- AUTO_INCREMENT de tabela `agendamento`
 --
 ALTER TABLE `agendamento`
-  MODIFY `id_agendamento` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_agendamento` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de tabela `cliente`
 --
 ALTER TABLE `cliente`
-  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT de tabela `servico`

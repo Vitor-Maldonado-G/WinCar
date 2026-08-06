@@ -8,11 +8,6 @@
   --bs-light-rgb: 238, 242, 248;
 }
 
-:root {
-  --bs-light: #eef2f8;
-  --bs-light-rgb: 238, 242, 248;
-}
-
 .card {
   border: none;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12) !important;
