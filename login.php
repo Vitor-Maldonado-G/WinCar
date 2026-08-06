@@ -16,7 +16,12 @@
 
                     <div class="mb-4">
                         <label for="senha" class="form-label">Senha</label>
-                        <input type="password" class="form-control" id="senha" name="senha" placeholder="Digite sua senha" required>
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="senha" name="senha" placeholder="Digite sua senha" required>
+                            <button class="btn btn-outline-light" type="button" onclick="alternarSenha('senha', this)">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </div>
                     </div>
 
                     <div class="d-grid">

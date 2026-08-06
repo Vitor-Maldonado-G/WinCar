@@ -51,15 +51,20 @@ include 'includes/header.php';
                     </select>
                 </div>
 
-                <input 
-                        type="date" 
-                        class="form-control" 
-                        id="data" 
-                        name="data" 
-                        min="<?php echo date('Y-m-d'); ?>" 
-                        max="<?php echo date('Y-m-d', strtotime('+60 days')); ?>" 
-                        onkeydown="return false" 
-                        required>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="data" class="form-label fw-bold">Data</label>
+                        <input 
+                                type="date" 
+                                class="form-control" 
+                                id="data" 
+                                name="data" 
+                                min="<?php echo date('Y-m-d'); ?>" 
+                                max="<?php echo date('Y-m-d', strtotime('+60 days')); ?>" 
+                                onkeydown="return false"
+                                onclick="this.showPicker()" 
+                                required>
+                    </div>
 
                     <div class="col-md-6 mb-3">
                         <label for="hora" class="form-label fw-bold">Horário</label>

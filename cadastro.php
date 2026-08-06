@@ -53,13 +53,18 @@ include 'includes/header.php';
 
                     <div class="mb-3">
                         <label for="senha" class="form-label fw-bold text-white">Senha</label>
-                        <input type="password" 
-                            class="form-control" 
-                            id="senha" 
-                            name="senha" 
-                            placeholder="Crie uma senha forte" 
-                            minlength="6"
-                            required>
+                        <div class="input-group">
+                            <input type="password" 
+                                class="form-control" 
+                                id="senha" 
+                                name="senha" 
+                                placeholder="Crie uma senha forte" 
+                                minlength="6"
+                                required>
+                            <button class="btn btn-outline-light" type="button" onclick="alternarSenha('senha', this)">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </div>
                         <div class="form-text text-light opacity-75">
                             A senha deve ter no mínimo 6 caracteres, contendo pelo menos 1 letra maiúscula e 1 número.
                         </div>
