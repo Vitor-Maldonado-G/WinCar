@@ -53,20 +53,19 @@ include 'includes/header.php';
 
                     <div class="mb-3">
                         <label for="senha" class="form-label fw-bold text-white">Senha</label>
-                        <div class="input-group">
-                            <input type="password" 
-                                class="form-control" 
-                                id="senha" 
-                                name="senha" 
-                                placeholder="Crie uma senha forte" 
-                                minlength="6"
-                                required>
-                            <button class="btn btn-outline-light" type="button" onclick="alternarSenha('senha', this)">
-                                <i class="bi bi-eye"></i>
-                            </button>
-                        </div>
-                        <div class="form-text text-light opacity-75">
-                            A senha deve ter no mínimo 6 caracteres, contendo pelo menos 1 letra maiúscula e 1 número.
+                        <div class="input-group has-validation">
+                        <input type="password" 
+                            class="form-control" 
+                            id="senha" 
+                            name="senha" 
+                            placeholder="Crie uma senha forte" 
+                            minlength="6"
+                            required>
+                        <button class="btn btn-outline-light" type="button" onclick="alternarSenha('senha', this)">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                        <div class="invalid-feedback">
+                            A senha precisa de no mínimo 6 caracteres, 1 letra maiúscula e 1 número.
                         </div>
                     </div>
 
@@ -106,13 +105,20 @@ function validarSenha(senha) {
 
 // Intercepta o envio do formulário
 document.getElementById('formCadastro').addEventListener('submit', function(e) {
-    const senha = document.getElementById('senha').value;
-    
+    const senhaInput = document.getElementById('senha');
+    const senha = senhaInput.value;
+
     if (!validarSenha(senha)) {
-        e.preventDefault(); // Impede o envio do formulário
-        alert('A senha deve ter no mínimo 6 caracteres, incluindo pelo menos uma letra maiúscula e um número!');
-        document.getElementById('senha').focus();
+        e.preventDefault();
+        senhaInput.classList.add('is-invalid');
+        senhaInput.focus();
+    } else {
+        senhaInput.classList.remove('is-invalid');
     }
+});
+
+document.getElementById('senha').addEventListener('input', function() {
+    this.classList.remove('is-invalid');
 });
 </script>
 

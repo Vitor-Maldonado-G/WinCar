@@ -33,6 +33,7 @@ include 'includes/header.php';
                 <div class="mb-3">
                     <label for="placa" class="form-label fw-bold">Placa do Veículo</label>
                     <input type="text" class="form-control text-uppercase" id="placa" name="placa" placeholder="Ex: ABC1D23 ou ABC1234" maxlength="7" required>
+                    <div class="invalid-feedback">Placa inválida. Use o formato ABC1D23 ou ABC1234.</div>
                     <div class="form-text">Apenas 7 caracteres (Ex: ABC1D23).</div>
                 </div>
 
@@ -101,18 +102,23 @@ include 'includes/header.php';
 
     
     function validarFormulario() {
-        const placaInput = document.getElementById('placa');
-        const placa = placaInput.value.trim();
-        const regexPlaca = /^[A-Z]{3}[0-9]{1}[A-Z0-9]{1}[0-9]{2}$/;
+    const placaInput = document.getElementById('placa');
+    const placa = placaInput.value.trim();
+    const regexPlaca = /^[A-Z]{3}[0-9]{1}[A-Z0-9]{1}[0-9]{2}$/;
 
-        if (!regexPlaca.test(placa)) {
-            alert('Placa inválida! Digite no padrão correto de 7 caracteres (Ex: ABC1D23 ou ABC1234).');
-            placaInput.focus();
-            return false;
-        }
-
-        return true;
+    if (!regexPlaca.test(placa)) {
+        placaInput.classList.add('is-invalid');
+        placaInput.focus();
+        return false;
     }
+
+    placaInput.classList.remove('is-invalid');
+    return true;
+}
+
+document.getElementById('placa').addEventListener('input', function() {
+    this.classList.remove('is-invalid');
+});
 </script>
 
 <?php include 'includes/footer.php'; ?>
