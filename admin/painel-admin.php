@@ -1,13 +1,29 @@
 <?php
-// TELA (MOCKUP) — dados fictícios só para visualização do layout.
-// A busca real no banco e o endpoint de mudar status ficam por conta do back-end.
-$agendamentosFicticios = [
-    ['id' => 101, 'cliente' => 'Ana Souza',     'modelo' => 'Civic 2.0',   'placa' => 'ABC1D23', 'servico' => 'Lavagem Completa', 'data' => '12/08/2026', 'hora' => '09:00', 'status' => 'Pendente'],
-    ['id' => 102, 'cliente' => 'Bruno Lima',    'modelo' => 'Gol 1.0',     'placa' => 'XYZ4E56', 'servico' => 'Polimento',        'data' => '12/08/2026', 'hora' => '11:00', 'status' => 'Confirmado'],
-    ['id' => 103, 'cliente' => 'Carla Nunes',   'modelo' => 'Onix 1.4',    'placa' => 'JJK9L01', 'servico' => 'Lavagem Simples',  'data' => '13/08/2026', 'hora' => '14:00', 'status' => 'Concluido'],
-    ['id' => 104, 'cliente' => 'Diego Alves',   'modelo' => 'HB20 1.0',    'placa' => 'MNO2P34', 'servico' => 'Lavagem de Motor', 'data' => '13/08/2026', 'hora' => '15:00', 'status' => 'Cancelado'],
-    ['id' => 105, 'cliente' => 'Elisa Prado',   'modelo' => 'Corolla 2.0', 'placa' => 'QRS5T67', 'servico' => 'Lavagem Completa', 'data' => '14/08/2026', 'hora' => '08:00', 'status' => 'Pendente'],
-];
+require_once __DIR__ . '/index.php'; // guarda de sessão — só admin logado passa daqui
+require_once '../config/conexao.php';
+
+// Busca todos os agendamentos de todos os clientes, com nome do cliente e do serviço
+try {
+    $sql = "SELECT 
+                a.id_agendamento AS id,
+                c.nome  AS cliente,
+                a.modelo,
+                a.placa,
+                s.nome  AS servico,
+                a.data,
+                a.hora,
+                a.status
+            FROM agendamento a
+            INNER JOIN cliente c ON a.id_cliente = c.id_cliente
+            INNER JOIN servico s ON a.id_servico = s.id_servico
+            ORDER BY a.data DESC, a.hora DESC";
+
+    $stmt = $conexao->prepare($sql);
+    $stmt->execute();
+    $agendamentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    $agendamentos = [];
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -75,8 +91,8 @@ $agendamentosFicticios = [
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if (!empty($agendamentosFicticios)): ?>
-                            <?php foreach ($agendamentosFicticios as $ag): ?>
+                        <?php if (!empty($agendamentos)): ?>
+                            <?php foreach ($agendamentos as $ag): ?>
                                 <?php
                                     $badgeClass = 'bg-warning text-dark';
                                     if ($ag['status'] == 'Confirmado') {
@@ -86,6 +102,9 @@ $agendamentosFicticios = [
                                     } elseif ($ag['status'] == 'Cancelado') {
                                         $badgeClass = 'bg-danger text-white';
                                     }
+
+                                    $dataFormatada = date('d/m/Y', strtotime($ag['data']));
+                                    $horaFormatada = date('H:i', strtotime($ag['hora']));
                                 ?>
                                 <tr data-status="<?php echo htmlspecialchars($ag['status']); ?>">
                                     <td class="ps-4 fw-bold text-dark"><?php echo htmlspecialchars($ag['cliente']); ?></td>
@@ -96,8 +115,8 @@ $agendamentosFicticios = [
                                         </span>
                                     </td>
                                     <td><?php echo htmlspecialchars($ag['servico']); ?></td>
-                                    <td><?php echo htmlspecialchars($ag['data']); ?></td>
-                                    <td><?php echo htmlspecialchars($ag['hora']); ?></td>
+                                    <td><?php echo $dataFormatada; ?></td>
+                                    <td><?php echo $horaFormatada; ?></td>
                                     <td>
                                         <span class="badge <?php echo $badgeClass; ?> px-3 py-2 rounded-pill fs-6">
                                             <?php echo $ag['status'] == 'Concluido' ? 'Concluído' : htmlspecialchars($ag['status']); ?>
@@ -137,7 +156,6 @@ $agendamentosFicticios = [
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // Filtro visual por status (só front-end; a busca real fica com o back-end)
     document.querySelectorAll('.filtro-btn').forEach(function (botao) {
         botao.addEventListener('click', function () {
             document.querySelectorAll('.filtro-btn').forEach(function (b) {
