@@ -4,7 +4,7 @@ session_start();
 // Conexão com o banco de dados
 require_once 'config/conexao.php';
 
-// Busca a lista de serviços ativos no banco
+// Busca a lista de serviços ativos no banco.
 try {
     $stmt = $conexao->query("SELECT * FROM servico");
     $servicos = $stmt->fetchAll(PDO::FETCH_ASSOC);
