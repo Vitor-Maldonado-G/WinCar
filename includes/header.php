@@ -4,6 +4,14 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 ?>
 
+<script>
+    (function() {
+        if (localStorage.getItem('wincar-tema') === 'dark') {
+            document.documentElement.setAttribute('data-bs-theme', 'dark');
+        }
+    })();
+</script>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -46,6 +54,10 @@ if (session_status() === PHP_SESSION_NONE) {
       </ul>
 
       <div class="d-flex flex-column flex-lg-row align-items-lg-center gap-3 ms-lg-auto mt-3 mt-lg-0">
+
+        <button class="btn btn-outline-light btn-sm" id="toggleTema" type="button" title="Alternar tema">
+            <i class="bi bi-moon-stars"></i>
+        </button>
 
         <?php if (isset($_SESSION['usuario_nome'])): ?>
             <?php 

@@ -13,7 +13,24 @@
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12) !important;
 }
 
+[data-bs-theme="dark"] .card.bg-primary {
+  background-color: #1d4ed8 !important;
+}
 
 body {
   font-family: 'Poppins', sans-serif;
+}
+
+[data-bs-theme="dark"] {
+  --bs-light: #12151c;
+  --bs-light-rgb: 18, 21, 28;
+}
+
+[data-bs-theme="dark"] .card {
+  background-color: #1b1f29;
+  color: #e8eaed;
+}
+
+[data-bs-theme="dark"] .text-dark {
+  color: #e8eaed !important;
 }

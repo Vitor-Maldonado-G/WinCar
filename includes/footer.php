@@ -22,6 +22,37 @@
     }
 </script>
 
+<script>
+    const botaoTema = document.getElementById('toggleTema');
+    const iconeTema = botaoTema.querySelector('i');
+
+    function atualizarIconeTema() {
+        if (document.documentElement.getAttribute('data-bs-theme') === 'dark') {
+            iconeTema.classList.remove('bi-moon-stars');
+            iconeTema.classList.add('bi-sun');
+        } else {
+            iconeTema.classList.remove('bi-sun');
+            iconeTema.classList.add('bi-moon-stars');
+        }
+    }
+
+    atualizarIconeTema();
+
+    botaoTema.addEventListener('click', function() {
+        const estaEscuro = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+
+        if (estaEscuro) {
+            document.documentElement.removeAttribute('data-bs-theme');
+            localStorage.setItem('wincar-tema', 'light');
+        } else {
+            document.documentElement.setAttribute('data-bs-theme', 'dark');
+            localStorage.setItem('wincar-tema', 'dark');
+        }
+
+        atualizarIconeTema();
+    });
+</script>
+
 
 </body> 
 </html> 
