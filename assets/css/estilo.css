@@ -34,3 +34,14 @@ body {
 [data-bs-theme="dark"] .text-dark {
   color: #e8eaed !important;
 }
+
+[data-bs-theme="dark"] .card.bg-primary .btn-light {
+  background-color: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #ffffff !important;
+}
+
+[data-bs-theme="dark"] .card.bg-primary .btn-light:hover {
+  background-color: rgba(255, 255, 255, 0.22);
+  color: #ffffff !important;
+}
