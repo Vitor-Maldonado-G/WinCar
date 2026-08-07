@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     try {
 
-        $sql = "SELECT id_cliente, nome, senha FROM cliente WHERE email = :email";
+        $sql = "SELECT id_cliente, nome, senha, tipo_usuario FROM cliente WHERE email = :email";
         
         
         $stmt = $conexao->prepare($sql);
@@ -24,8 +24,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($usuario && password_verify($senha, $usuario['senha'])) {
     $_SESSION['usuario_id']   = $usuario['id_cliente'];
     $_SESSION['usuario_nome'] = $usuario['nome'];
+    $_SESSION['tipo_usuario'] = $usuario['tipo_usuario'];
 
-    header("Location: painelcliente.php");
+    if ($_SESSION['tipo_usuario'] === 'admin') {
+        header("Location: admin/painel-admin.php");
+    } else {
+        header("Location: painelcliente.php");
+    }
     exit();
 } else {
     echo "<script>
