@@ -26,8 +26,78 @@ include 'includes/header.php';
             <form action="processa_agendamento.php" method="POST" id="formAgendamento" onsubmit="return validarFormulario()" novalidate>
                 
                 <div class="mb-3">
-                    <label for="modelo" class="form-label fw-bold">Modelo do Veículo</label>
-                    <input type="text" class="form-control" id="modelo" name="modelo" placeholder="Ex: Civic 2.0, Gol 1.0..." required>
+                    <label for="modelo_busca" class="form-label fw-bold">Modelo do Veículo</label>
+                    <input type="text" class="form-control" id="modelo_busca" list="listaModelos" placeholder="Digite marca ou modelo (ex: Nissan March)" autocomplete="off" maxlength="60" required>
+
+                    <datalist id="listaModelos">
+                        <option value="Chevrolet Onix">
+                        <option value="Chevrolet Onix Plus">
+                        <option value="Chevrolet Prisma">
+                        <option value="Chevrolet Celta">
+                        <option value="Chevrolet Cruze">
+                        <option value="Chevrolet Tracker">
+                        <option value="Chevrolet S10">
+                        <option value="Fiat Uno">
+                        <option value="Fiat Palio">
+                        <option value="Fiat Argo">
+                        <option value="Fiat Mobi">
+                        <option value="Fiat Strada">
+                        <option value="Fiat Toro">
+                        <option value="Fiat Cronos">
+                        <option value="Volkswagen Gol">
+                        <option value="Volkswagen Voyage">
+                        <option value="Volkswagen Polo">
+                        <option value="Volkswagen Virtus">
+                        <option value="Volkswagen T-Cross">
+                        <option value="Volkswagen Saveiro">
+                        <option value="Volkswagen Nivus">
+                        <option value="Ford Ka">
+                        <option value="Ford EcoSport">
+                        <option value="Ford Ranger">
+                        <option value="Hyundai HB20">
+                        <option value="Hyundai Creta">
+                        <option value="Hyundai Tucson">
+                        <option value="Toyota Corolla">
+                        <option value="Toyota Etios">
+                        <option value="Toyota Hilux">
+                        <option value="Toyota Yaris">
+                        <option value="Toyota SW4">
+                        <option value="Honda Civic">
+                        <option value="Honda City">
+                        <option value="Honda HR-V">
+                        <option value="Honda Fit">
+                        <option value="Renault Kwid">
+                        <option value="Renault Sandero">
+                        <option value="Renault Logan">
+                        <option value="Renault Duster">
+                        <option value="Nissan Kicks">
+                        <option value="Nissan Versa">
+                        <option value="Nissan March">
+                        <option value="Jeep Renegade">
+                        <option value="Jeep Compass">
+                        <option value="Peugeot 208">
+                        <option value="Citroën C3">
+                    </datalist>
+
+                    <div class="form-check mt-2">
+                        <input class="form-check-input" type="checkbox" id="naoEncontrei">
+                        <label class="form-check-label" for="naoEncontrei">
+                            Não encontrei meu veículo na lista
+                        </label>
+                    </div>
+
+                    <div id="camposManuais" class="d-none mt-2">
+                        <div class="row g-2">
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" id="marca_manual" placeholder="Marca (ex: BYD)" maxlength="30">
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" id="modelo_manual" placeholder="Modelo (ex: Dolphin)" maxlength="30">
+                            </div>
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="modelo" name="modelo">
                 </div>
 
                 <div class="mb-3">
@@ -101,6 +171,53 @@ include 'includes/header.php';
     });
 
     
+    // Campo de busca com autocomplete + fallback de marca/modelo manual
+    const modeloBusca = document.getElementById('modelo_busca');
+    const naoEncontrei = document.getElementById('naoEncontrei');
+    const camposManuais = document.getElementById('camposManuais');
+    const marcaManual = document.getElementById('marca_manual');
+    const modeloManual = document.getElementById('modelo_manual');
+    const modeloHidden = document.getElementById('modelo');
+
+    function filtrarTexto(valor) {
+        // Só permite letras, números, espaços e hífen — bloqueia símbolos aleatórios
+        return valor.replace(/[^a-zA-ZÀ-ÿ0-9\s-]/g, '');
+    }
+
+    naoEncontrei.addEventListener('change', function() {
+        if (this.checked) {
+            modeloBusca.value = '';
+            modeloBusca.setAttribute('disabled', 'disabled');
+            modeloBusca.removeAttribute('required');
+            camposManuais.classList.remove('d-none');
+            marcaManual.setAttribute('required', 'required');
+            modeloManual.setAttribute('required', 'required');
+            modeloHidden.value = '';
+            marcaManual.focus();
+        } else {
+            modeloBusca.removeAttribute('disabled');
+            modeloBusca.setAttribute('required', 'required');
+            camposManuais.classList.add('d-none');
+            marcaManual.removeAttribute('required');
+            modeloManual.removeAttribute('required');
+            marcaManual.value = '';
+            modeloManual.value = '';
+            modeloHidden.value = modeloBusca.value.trim();
+        }
+    });
+
+    modeloBusca.addEventListener('input', function() {
+        this.value = filtrarTexto(this.value);
+        modeloHidden.value = this.value.trim();
+    });
+
+    [marcaManual, modeloManual].forEach(function(campo) {
+        campo.addEventListener('input', function() {
+            this.value = filtrarTexto(this.value);
+            modeloHidden.value = (marcaManual.value.trim() + ' ' + modeloManual.value.trim()).trim();
+        });
+    });
+
     function validarFormulario() {
     const placaInput = document.getElementById('placa');
     const placa = placaInput.value.trim();
@@ -113,6 +230,18 @@ include 'includes/header.php';
     }
 
     placaInput.classList.remove('is-invalid');
+
+    if (!modeloHidden.value.trim()) {
+        if (naoEncontrei.checked) {
+            marcaManual.classList.add('is-invalid');
+            marcaManual.focus();
+        } else {
+            modeloBusca.classList.add('is-invalid');
+            modeloBusca.focus();
+        }
+        return false;
+    }
+
     return true;
 }
 
