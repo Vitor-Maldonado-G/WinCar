@@ -180,4 +180,12 @@ include 'includes/header.php';
 
 </div>
 
+<script>
+    // Atualiza a página automaticamente a cada 30 segundos,
+    // pra refletir mudanças de status feitas pelo admin
+    setTimeout(function() {
+        location.reload();
+    }, 30000);
+</script>
+
 <?php include 'includes/footer.php'; ?>

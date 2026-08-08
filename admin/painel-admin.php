@@ -133,15 +133,21 @@ try {
                                         </span>
                                     </td>
                                     <td class="text-center pe-4">
-                                        <form action="mudar-status.php" method="POST" class="d-inline">
-                                            <input type="hidden" name="id_agendamento" value="<?php echo $ag['id']; ?>">
-                                            <select name="novo_status" class="form-select form-select-sm" style="min-width: 140px;" onchange="this.form.submit()">
-                                                <option value="Pendente" <?php echo $ag['status'] == 'Pendente' ? 'selected' : ''; ?>>Pendente</option>
-                                                <option value="Confirmado" <?php echo $ag['status'] == 'Confirmado' ? 'selected' : ''; ?>>Confirmado</option>
-                                                <option value="Concluido" <?php echo $ag['status'] == 'Concluido' ? 'selected' : ''; ?>>Concluído</option>
-                                                <option value="Cancelado" <?php echo $ag['status'] == 'Cancelado' ? 'selected' : ''; ?>>Cancelado</option>
-                                            </select>
-                                        </form>
+                                        <?php if ($ag['status'] === 'Cancelado'): ?>
+                                            <span class="text-muted small fst-italic" title="Agendamentos cancelados não podem mais ser alterados">
+                                                <i class="bi bi-lock-fill me-1"></i>Cancelado
+                                            </span>
+                                        <?php else: ?>
+                                            <form action="mudar-status.php" method="POST" class="d-inline">
+                                                <input type="hidden" name="id_agendamento" value="<?php echo $ag['id']; ?>">
+                                                <select name="novo_status" class="form-select form-select-sm" data-status-atual="<?php echo $ag['status']; ?>" style="min-width: 140px;" onchange="confirmarMudancaStatus(this)">
+                                                    <option value="Pendente" <?php echo $ag['status'] == 'Pendente' ? 'selected' : ''; ?>>Pendente</option>
+                                                    <option value="Confirmado" <?php echo $ag['status'] == 'Confirmado' ? 'selected' : ''; ?>>Confirmado</option>
+                                                    <option value="Concluido" <?php echo $ag['status'] == 'Concluido' ? 'selected' : ''; ?>>Concluído</option>
+                                                    <option value="Cancelado" <?php echo $ag['status'] == 'Cancelado' ? 'selected' : ''; ?>>Cancelado</option>
+                                                </select>
+                                            </form>
+                                        <?php endif; ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -194,6 +200,26 @@ try {
 
         atualizarIconeTema();
     });
+
+    function confirmarMudancaStatus(select) {
+        const statusCritico = ['Cancelado', 'Concluido'];
+        const valorOriginal = select.dataset.statusAtual;
+        const novoValor = select.value;
+
+        if (statusCritico.includes(novoValor) && novoValor !== valorOriginal) {
+            const confirmou = confirm(
+                novoValor === 'Cancelado'
+                    ? 'Confirma o cancelamento deste agendamento?'
+                    : 'Confirma que este serviço foi concluído?'
+            );
+            if (!confirmou) {
+                select.value = valorOriginal; // volta pro valor original se desistir
+                return;
+            }
+        }
+
+        select.form.submit();
+    }
 
     document.querySelectorAll('.filtro-btn').forEach(function (botao) {
         botao.addEventListener('click', function () {
