@@ -32,6 +32,13 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WinCar - Painel Admin</title>
     <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+    <script>
+        (function() {
+            if (localStorage.getItem('wincar-tema') === 'dark') {
+                document.documentElement.setAttribute('data-bs-theme', 'dark');
+            }
+        })();
+    </script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="../assets/css/estilo.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
@@ -50,6 +57,9 @@ try {
     </span>
 
     <div class="d-flex align-items-center gap-3">
+      <button class="btn btn-outline-light btn-sm" id="toggleTema" type="button" title="Alternar tema">
+          <i class="bi bi-moon-stars"></i>
+      </button>
       <span class="text-white fw-semibold">Olá, Admin!</span>
       <a href="../logout.php" class="btn btn-outline-light btn-sm">Sair</a>
     </div>
@@ -156,6 +166,35 @@ try {
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+    const botaoTema = document.getElementById('toggleTema');
+    const iconeTema = botaoTema.querySelector('i');
+
+    function atualizarIconeTema() {
+        if (document.documentElement.getAttribute('data-bs-theme') === 'dark') {
+            iconeTema.classList.remove('bi-moon-stars');
+            iconeTema.classList.add('bi-sun');
+        } else {
+            iconeTema.classList.remove('bi-sun');
+            iconeTema.classList.add('bi-moon-stars');
+        }
+    }
+
+    atualizarIconeTema();
+
+    botaoTema.addEventListener('click', function() {
+        const estaEscuro = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+
+        if (estaEscuro) {
+            document.documentElement.removeAttribute('data-bs-theme');
+            localStorage.setItem('wincar-tema', 'light');
+        } else {
+            document.documentElement.setAttribute('data-bs-theme', 'dark');
+            localStorage.setItem('wincar-tema', 'dark');
+        }
+
+        atualizarIconeTema();
+    });
+
     document.querySelectorAll('.filtro-btn').forEach(function (botao) {
         botao.addEventListener('click', function () {
             document.querySelectorAll('.filtro-btn').forEach(function (b) {

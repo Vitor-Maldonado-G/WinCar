@@ -48,16 +48,20 @@ if (session_status() === PHP_SESSION_NONE) {
         <li class="nav-item">
           <a class="nav-link text-white fw-bold fs-5" href="index.php">Tela inicial</a>
         </li>
+        <?php if (isset($_SESSION['usuario_nome'])): ?>
+        <li class="nav-item">
+          <a class="nav-link text-white fw-bold fs-5" href="painelcliente.php">Meus Agendamentos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white fw-bold fs-5" href="agendar.php">Novo Agendamento</a>
+        </li>
+        <?php endif; ?>
         <li class="nav-item">
           <a class="nav-link text-white fw-bold fs-5" href="sobrenos.php">Sobre nós</a>
         </li>
       </ul>
 
       <div class="d-flex flex-column flex-lg-row align-items-lg-center gap-3 ms-lg-auto mt-3 mt-lg-0">
-
-        <button class="btn btn-outline-light btn-sm" id="toggleTema" type="button" title="Alternar tema">
-            <i class="bi bi-moon-stars"></i>
-        </button>
 
         <?php if (isset($_SESSION['usuario_nome'])): ?>
             <?php 
@@ -72,14 +76,21 @@ if (session_status() === PHP_SESSION_NONE) {
                 </a>
 
                 <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="dropdownUser">
-                    <li><a class="dropdown-item" href="painelcliente.php">Meus Agendamentos</a></li>
-                    <li><a class="dropdown-item" href="agendar.php">Novo Agendamento</a></li>
+                    <li>
+                        <button class="dropdown-item d-flex align-items-center gap-2" id="toggleTema" type="button">
+                            <i class="bi bi-moon-stars"></i> Alternar tema
+                        </button>
+                    </li>
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item text-danger fw-bold" href="logout.php">Sair</a></li>
                 </ul>
             </div>
 
         <?php else: ?>
+
+            <button class="btn btn-outline-light btn-sm" id="toggleTema" type="button" title="Alternar tema">
+                <i class="bi bi-moon-stars"></i>
+            </button>
 
             <a href="login.php" class="btn btn-outline-light me-2">Entrar</a>
             <a href="cadastro.php" class="btn btn-primary fw-bold">Cadastrar</a>
