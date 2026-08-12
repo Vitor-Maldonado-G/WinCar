@@ -35,16 +35,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bindParam(':senha', $senhaHash);
 
         if ($stmt->execute()) {
-            echo "<script>
-                    alert('Cadastro realizado com sucesso! 🚗');
-                    window.location.href = 'login.php';
-                  </script>";
+            $_SESSION['mensagem'] = "Cadastro realizado com sucesso! Faça login para continuar.";
+            $_SESSION['tipo_mensagem'] = "success";
+            header("Location: login.php");
             exit();
         }
 
     } catch (PDOException $e) {
-        echo "<h3>Erro ao cadastrar no banco de dados:</h3> " . htmlspecialchars($e->getMessage());
-        echo "<br><br><a href='cadastro.php'>Voltar ao cadastro</a>";
+        // Não expõe o erro técnico do banco pro usuário final — fica só no log do servidor
+        error_log("Erro ao cadastrar cliente: " . $e->getMessage());
+
+        // Detecta o caso mais comum (e-mail já cadastrado) pra dar uma mensagem útil
+        if ($e->getCode() == 23000) {
+            $_SESSION['mensagem'] = "Este e-mail já está cadastrado. Tente fazer login.";
+            $_SESSION['tipo_mensagem'] = "warning";
+        } else {
+            $_SESSION['mensagem'] = "Não foi possível concluir o cadastro. Tente novamente em instantes.";
+            $_SESSION['tipo_mensagem'] = "danger";
+        }
+
+        header("Location: cadastro.php");
+        exit();
     }
 
 } else {

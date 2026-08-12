@@ -33,15 +33,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     exit();
 } else {
-    echo "<script>
-            alert('E-mail ou senha incorretos!');
-            window.location.href = 'login.php';
-          </script>";
+    $_SESSION['mensagem'] = "E-mail ou senha incorretos.";
+    $_SESSION['tipo_mensagem'] = "danger";
+    header("Location: login.php");
     exit();
 }
 
     } catch (PDOException $e) {
-        echo "Erro no login: " . $e->getMessage();
+        error_log("Erro no login: " . $e->getMessage());
+        $_SESSION['mensagem'] = "Não foi possível processar o login. Tente novamente em instantes.";
+        $_SESSION['tipo_mensagem'] = "danger";
+        header("Location: login.php");
+        exit();
     }
 }
     

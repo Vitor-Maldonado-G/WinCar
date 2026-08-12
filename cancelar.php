@@ -30,7 +30,10 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
             $_SESSION['tipo_mensagem'] = "danger";
         }
 
-    } catch (PDOException $e) {$_SESSION['mensagem'] = "Erro ao processar o cancelamento: " . $e->getMessage();$_SESSION['tipo_mensagem'] = "danger";
+    } catch (PDOException $e) {
+        error_log("Erro ao cancelar agendamento: " . $e->getMessage());
+        $_SESSION['mensagem'] = "Não foi possível cancelar o agendamento. Tente novamente em instantes.";
+        $_SESSION['tipo_mensagem'] = "danger";
     }
 } else {
     $_SESSION['mensagem'] = "Agendamento inválido.";

@@ -2,6 +2,18 @@
 
 <div class="row justify-content-center w-100 m-0">
     <div class="col-md-6 col-lg-4">
+
+        <?php if (isset($_SESSION['mensagem'])): ?>
+            <div class="alert alert-<?php echo $_SESSION['tipo_mensagem']; ?> alert-dismissible fade show rounded-4 mb-4" role="alert">
+                <?php 
+                    echo $_SESSION['mensagem']; 
+                    unset($_SESSION['mensagem']);
+                    unset($_SESSION['tipo_mensagem']);
+                ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php endif; ?>
+
         <div class="card bg-primary text-white shadow border-0">
             <div class="card-body p-4">
                 
