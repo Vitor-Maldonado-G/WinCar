@@ -19,6 +19,18 @@ include 'includes/header.php';
 ?>
 
 <div class="container my-5" style="max-width: 600px;">
+
+    <?php if (isset($_SESSION['mensagem'])): ?>
+        <div class="alert alert-<?php echo $_SESSION['tipo_mensagem']; ?> alert-dismissible fade show rounded-4 mb-4" role="alert">
+            <?php 
+                echo $_SESSION['mensagem']; 
+                unset($_SESSION['mensagem']);
+                unset($_SESSION['tipo_mensagem']);
+            ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <?php endif; ?>
+
     <div class="card shadow-lg border-0 rounded-4">
         <div class="card-body p-4 p-md-5">
             <h2 class="text-center fw-bold text-primary mb-4">Agendar Serviço</h2>
