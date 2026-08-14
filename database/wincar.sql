@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 14/08/2026 às 04:06
+-- Tempo de geração: 14/08/2026 às 04:30
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -45,7 +45,7 @@ CREATE TABLE `agendamento` (
 
 INSERT INTO `agendamento` (`id_agendamento`, `id_cliente`, `id_servico`, `placa`, `modelo`, `data`, `hora`, `status`, `created_at`) VALUES
 (1, 7, 1, 'NEG0244', 'Gol 2.0', '2026-08-06', '17:00:00', 'Cancelado', '2026-08-05 00:53:35'),
-(2, 7, 3, 'NEG0244', 'Fiat Uno', '2026-08-08', '14:00:00', 'Pendente', '2026-08-08 15:59:54');
+(2, 7, 3, 'NEG0244', 'Fiat Uno', '2026-08-08', '14:00:00', 'Cancelado', '2026-08-08 15:59:54');
 
 -- --------------------------------------------------------
 
@@ -67,7 +67,7 @@ CREATE TABLE `cliente` (
 --
 
 INSERT INTO `cliente` (`id_cliente`, `nome`, `email`, `telefone`, `senha`, `tipo_usuario`) VALUES
-(7, 'Emanuel trueadam', 'emanuelteste@gmail.com', '(11) 99999-9999', '$2y$10$3IxkNX0tDIZboIZiR1suoetg2/6NDowQ8RDaqY.GKBI2vERDhvR8O', 'cliente'),
+(7, 'Emanuel trueadam', 'emanuelteste@gmail.com', '(11) 99999-9999', '$2y$10$3IxkNX0tDIZboIZiR1suoetg2/6NDowQ8RDaqY.GKBI2vERDhvR8O', 'admin'),
 (8, 'Vitor Lindo', 'vitorteste@gmail.com', '(11) 99999-9999', '$2y$10$micIjz58L6eDon.73tzN9.KqtFG6z9ylRyOt3JaoxBUxYlm2UtDem', 'cliente');
 
 -- --------------------------------------------------------
@@ -112,8 +112,7 @@ ALTER TABLE `agendamento`
 --
 ALTER TABLE `cliente`
   ADD PRIMARY KEY (`id_cliente`),
-  ADD UNIQUE KEY `email` (`email`),
-  ADD UNIQUE KEY `email_2` (`email`);
+  ADD UNIQUE KEY `email` (`email`);
 
 --
 -- Índices de tabela `servico`
@@ -135,7 +134,7 @@ ALTER TABLE `agendamento`
 -- AUTO_INCREMENT de tabela `cliente`
 --
 ALTER TABLE `cliente`
-  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de tabela `servico`
