@@ -70,7 +70,6 @@ INSERT INTO `cliente` (`id_cliente`, `nome`, `email`, `telefone`, `senha`, `tipo
 (7, 'Emanuel trueadam', 'emanuelteste@gmail.com', '(11) 99999-9999', '$2y$10$3IxkNX0tDIZboIZiR1suoetg2/6NDowQ8RDaqY.GKBI2vERDhvR8O', 'admin'),
 (8, 'Vitor Lindo', 'vitorteste@gmail.com', '(11) 99999-9999', '$2y$10$micIjz58L6eDon.73tzN9.KqtFG6z9ylRyOt3JaoxBUxYlm2UtDem', 'cliente');
 
--- --------------------------------------------------------
 
 --
 -- Estrutura para tabela `servico`
