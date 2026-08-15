@@ -20,6 +20,19 @@ if (session_status() === PHP_SESSION_NONE) {
     <title>WinCar - Sistema de Agendamento</title>
     <link rel="icon" type="image/png" href="assets/img/favicon.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script>
+        // Se o CDN do Bootstrap falhar (sem internet, por exemplo), carrega a cópia local
+        (function() {
+            var testEl = document.createElement('div');
+            testEl.className = 'd-none';
+            document.documentElement.appendChild(testEl);
+            var cdnFuncionou = window.getComputedStyle(testEl).display === 'none';
+            document.documentElement.removeChild(testEl);
+            if (!cdnFuncionou) {
+                document.write('<link rel="stylesheet" href="assets/css/bootstrap.min.css">');
+            }
+        })();
+    </script>
     <link href="assets/css/estilo.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
