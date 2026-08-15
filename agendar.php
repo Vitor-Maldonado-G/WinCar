@@ -230,6 +230,58 @@ include 'includes/header.php';
         });
     });
 
+    // Consulta os horários já ocupados assim que a data é escolhida
+    const campoData = document.getElementById('data');
+    const campoHora = document.getElementById('hora');
+    const horariosOriginais = Array.from(campoHora.options).map(function(opt) {
+        return { value: opt.value, texto: opt.textContent };
+    });
+
+    campoData.addEventListener('change', function() {
+        const dataEscolhida = this.value;
+        if (!dataEscolhida) return;
+
+        campoHora.disabled = true;
+        campoHora.innerHTML = '<option value="" selected disabled>Carregando horários...</option>';
+
+        fetch('horarios-disponiveis.php?data=' + encodeURIComponent(dataEscolhida))
+            .then(function(resposta) {
+                if (!resposta.ok) throw new Error('Falha ao consultar horários');
+                return resposta.json();
+            })
+            .then(function(horariosOcupados) {
+                campoHora.innerHTML = '';
+                horariosOriginais.forEach(function(opt) {
+                    if (opt.value === '' || !horariosOcupados.includes(opt.value)) {
+                        const novaOpcao = document.createElement('option');
+                        novaOpcao.value = opt.value;
+                        novaOpcao.textContent = opt.value === '' ? opt.texto : opt.texto;
+                        if (opt.value === '') {
+                            novaOpcao.selected = true;
+                            novaOpcao.disabled = true;
+                        }
+                        campoHora.appendChild(novaOpcao);
+                    }
+                });
+                campoHora.disabled = false;
+            })
+            .catch(function() {
+                // Se a consulta falhar, mantém todos os horários visíveis (não trava o usuário)
+                campoHora.innerHTML = '';
+                horariosOriginais.forEach(function(opt) {
+                    const novaOpcao = document.createElement('option');
+                    novaOpcao.value = opt.value;
+                    novaOpcao.textContent = opt.texto;
+                    if (opt.value === '') {
+                        novaOpcao.selected = true;
+                        novaOpcao.disabled = true;
+                    }
+                    campoHora.appendChild(novaOpcao);
+                });
+                campoHora.disabled = false;
+            });
+    });
+
     function validarFormulario() {
     const placaInput = document.getElementById('placa');
     const placa = placaInput.value.trim();
