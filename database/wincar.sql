@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 18/08/2026 às 03:55
+-- Tempo de geração: 18/08/2026 às 12:27
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -24,6 +24,78 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Estrutura para tabela `agendamento`
+--
+
+CREATE TABLE `agendamento` (
+  `id_agendamento` int(11) NOT NULL,
+  `id_cliente` int(11) NOT NULL,
+  `id_servico` int(11) NOT NULL,
+  `placa` varchar(8) NOT NULL,
+  `modelo` varchar(50) NOT NULL,
+  `data` date NOT NULL,
+  `hora` time NOT NULL,
+  `status` enum('Pendente','Confirmado','Concluido','Cancelado') DEFAULT 'Pendente',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `agendamento`
+--
+
+INSERT INTO `agendamento` (`id_agendamento`, `id_cliente`, `id_servico`, `placa`, `modelo`, `data`, `hora`, `status`, `created_at`) VALUES
+(3, 7, 3, 'NEG0244', 'Toyota Corolla', '2026-08-18', '08:00:00', 'Pendente', '2026-08-18 01:57:40');
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `cliente`
+--
+
+CREATE TABLE `cliente` (
+  `id_cliente` int(11) NOT NULL,
+  `nome` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `telefone` varchar(20) NOT NULL,
+  `senha` varchar(255) NOT NULL,
+  `tipo_usuario` enum('admin','cliente') DEFAULT 'cliente'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `cliente`
+--
+
+INSERT INTO `cliente` (`id_cliente`, `nome`, `email`, `telefone`, `senha`, `tipo_usuario`) VALUES
+(7, 'Emanuel trueadam', 'emanuelteste@gmail.com', '(11) 99999-9999', '$2y$10$3IxkNX0tDIZboIZiR1suoetg2/6NDowQ8RDaqY.GKBI2vERDhvR8O', 'cliente'),
+(8, 'Vitor Lindo', 'vitorteste@gmail.com', '(11) 99999-9999', '$2y$10$micIjz58L6eDon.73tzN9.KqtFG6z9ylRyOt3JaoxBUxYlm2UtDem', 'cliente');
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `servico`
+--
+
+CREATE TABLE `servico` (
+  `id_servico` int(11) NOT NULL,
+  `nome` varchar(100) NOT NULL,
+  `descricao` text DEFAULT NULL,
+  `preco` varchar(30) NOT NULL,
+  `duracao` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `servico`
+--
+
+INSERT INTO `servico` (`id_servico`, `nome`, `descricao`, `preco`, `duracao`) VALUES
+(1, 'Lavagem Simples', 'Lavagem externa do veículo.', '40.00', 60),
+(2, 'Lavagem Completa', 'Lavagem interna e externa.', '80.00', 120),
+(3, 'Polimento', 'Polimento da pintura do veículo.', '250.00', 240),
+(4, 'Lavagem de Motor', 'Limpeza do compartimento do motor.', '70.00', 90);
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura para tabela `veiculo`
 --
 
@@ -36,8 +108,37 @@ CREATE TABLE `veiculo` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Despejando dados para a tabela `veiculo`
+--
+
+INSERT INTO `veiculo` (`id_veiculo`, `id_cliente`, `placa`, `modelo`, `created_at`) VALUES
+(1, 7, 'NEG0244', 'Toyota Corolla', '2026-08-18 01:57:40');
+
+--
 -- Índices para tabelas despejadas
 --
+
+--
+-- Índices de tabela `agendamento`
+--
+ALTER TABLE `agendamento`
+  ADD PRIMARY KEY (`id_agendamento`),
+  ADD UNIQUE KEY `data` (`data`,`hora`),
+  ADD KEY `fk_cliente` (`id_cliente`),
+  ADD KEY `fk_servico` (`id_servico`);
+
+--
+-- Índices de tabela `cliente`
+--
+ALTER TABLE `cliente`
+  ADD PRIMARY KEY (`id_cliente`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
+-- Índices de tabela `servico`
+--
+ALTER TABLE `servico`
+  ADD PRIMARY KEY (`id_servico`);
 
 --
 -- Índices de tabela `veiculo`
@@ -52,14 +153,39 @@ ALTER TABLE `veiculo`
 --
 
 --
+-- AUTO_INCREMENT de tabela `agendamento`
+--
+ALTER TABLE `agendamento`
+  MODIFY `id_agendamento` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT de tabela `cliente`
+--
+ALTER TABLE `cliente`
+  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT de tabela `servico`
+--
+ALTER TABLE `servico`
+  MODIFY `id_servico` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
 -- AUTO_INCREMENT de tabela `veiculo`
 --
 ALTER TABLE `veiculo`
-  MODIFY `id_veiculo` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_veiculo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Restrições para tabelas despejadas
 --
+
+--
+-- Restrições para tabelas `agendamento`
+--
+ALTER TABLE `agendamento`
+  ADD CONSTRAINT `fk_cliente` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id_cliente`),
+  ADD CONSTRAINT `fk_servico` FOREIGN KEY (`id_servico`) REFERENCES `servico` (`id_servico`);
 
 --
 -- Restrições para tabelas `veiculo`
