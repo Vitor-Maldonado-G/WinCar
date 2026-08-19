@@ -166,6 +166,11 @@ include 'includes/header.php';
                     </div>
                 </div>
 
+                <div class="alert alert-info d-flex align-items-center gap-2 rounded-3 mb-0" role="alert">
+                    <i class="bi bi-info-circle-fill"></i>
+                    <small class="mb-0">O pagamento é realizado <strong>exclusivamente no local</strong>, na retirada do veículo.</small>
+                </div>
+
                 <div class="d-grid mt-4">
                     <button type="submit" class="btn btn-primary btn-lg fw-bold">Confirmar Agendamento</button>
                 </div>
