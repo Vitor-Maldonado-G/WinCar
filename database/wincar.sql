@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 19/08/2026 às 02:14
+-- Tempo de geração: 19/08/2026 às 02:56
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -27,6 +27,7 @@ SET time_zone = "+00:00";
 -- Estrutura para tabela `agendamento`
 --
 
+DROP TABLE IF EXISTS `agendamento`;
 CREATE TABLE `agendamento` (
   `id_agendamento` int(11) NOT NULL,
   `id_cliente` int(11) NOT NULL,
@@ -44,7 +45,8 @@ CREATE TABLE `agendamento` (
 --
 
 INSERT INTO `agendamento` (`id_agendamento`, `id_cliente`, `id_servico`, `placa`, `modelo`, `data`, `hora`, `status`, `created_at`) VALUES
-(3, 7, 3, 'NEG0244', 'Toyota Corolla', '2026-08-18', '08:00:00', 'Pendente', '2026-08-18 01:57:40');
+(3, 7, 3, 'NEG0244', 'Toyota Corolla', '2026-08-18', '08:00:00', 'Pendente', '2026-08-18 01:57:40'),
+(4, 7, 4, 'ABC1234', 'Chevrolet S10', '2026-08-29', '16:00:00', 'Pendente', '2026-08-19 00:49:41');
 
 -- --------------------------------------------------------
 
@@ -52,6 +54,7 @@ INSERT INTO `agendamento` (`id_agendamento`, `id_cliente`, `id_servico`, `placa`
 -- Estrutura para tabela `cliente`
 --
 
+DROP TABLE IF EXISTS `cliente`;
 CREATE TABLE `cliente` (
   `id_cliente` int(11) NOT NULL,
   `nome` varchar(100) NOT NULL,
@@ -75,6 +78,7 @@ INSERT INTO `cliente` (`id_cliente`, `nome`, `email`, `telefone`, `senha`, `tipo
 -- Estrutura para tabela `servico`
 --
 
+DROP TABLE IF EXISTS `servico`;
 CREATE TABLE `servico` (
   `id_servico` int(11) NOT NULL,
   `nome` varchar(100) NOT NULL,
@@ -100,6 +104,7 @@ INSERT INTO `servico` (`id_servico`, `nome`, `descricao`, `preco`, `duracao`, `i
 -- Estrutura para tabela `veiculo`
 --
 
+DROP TABLE IF EXISTS `veiculo`;
 CREATE TABLE `veiculo` (
   `id_veiculo` int(11) NOT NULL,
   `id_cliente` int(11) NOT NULL,
@@ -113,7 +118,8 @@ CREATE TABLE `veiculo` (
 --
 
 INSERT INTO `veiculo` (`id_veiculo`, `id_cliente`, `placa`, `modelo`, `created_at`) VALUES
-(1, 7, 'NEG0244', 'Toyota Corolla', '2026-08-18 01:57:40');
+(1, 7, 'NEG0244', 'Toyota Corolla', '2026-08-18 01:57:40'),
+(2, 7, 'ABC1234', 'Chevrolet S10', '2026-08-19 00:49:41');
 
 --
 -- Índices para tabelas despejadas
@@ -156,7 +162,7 @@ ALTER TABLE `veiculo`
 -- AUTO_INCREMENT de tabela `agendamento`
 --
 ALTER TABLE `agendamento`
-  MODIFY `id_agendamento` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_agendamento` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de tabela `cliente`
@@ -174,7 +180,7 @@ ALTER TABLE `servico`
 -- AUTO_INCREMENT de tabela `veiculo`
 --
 ALTER TABLE `veiculo`
-  MODIFY `id_veiculo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_veiculo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Restrições para tabelas despejadas
