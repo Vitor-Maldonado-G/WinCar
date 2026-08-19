@@ -7,6 +7,7 @@ try {
     $sql = "SELECT 
                 a.id_agendamento AS id,
                 c.nome  AS cliente,
+                c.telefone AS telefone,
                 a.modelo,
                 a.placa,
                 s.nome  AS servico,
@@ -111,6 +112,7 @@ try {
                             <th>Horário</th>
                             <th>Status</th>
                             <th class="text-center pe-4">Ação</th>
+                            <th class="text-center pe-4">Contato</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -162,11 +164,36 @@ try {
                                             </form>
                                         <?php endif; ?>
                                     </td>
+                                    <td class="text-center pe-4">
+                                        <?php
+                                            // Monta o link do WhatsApp com uma mensagem que muda conforme o status
+                                            $telefoneLimpo = preg_replace('/\D/', '', $ag['telefone']);
+                                            $primeiroNomeCliente = explode(' ', trim($ag['cliente']))[0];
+                                            $dataFormatadaWpp = date('d/m', strtotime($ag['data']));
+
+                                            if ($ag['status'] === 'Concluido') {
+                                                $mensagemWpp = "Olá, {$primeiroNomeCliente}! Aqui é da WinCar 🚗 Seu {$ag['modelo']} já está pronto para retirada!";
+                                            } elseif ($ag['status'] === 'Confirmado') {
+                                                $mensagemWpp = "Olá, {$primeiroNomeCliente}! Aqui é da WinCar 🚗 Confirmando seu agendamento de {$ag['servico']} no dia {$dataFormatadaWpp} às {$ag['hora']}.";
+                                            } else {
+                                                $mensagemWpp = "Olá, {$primeiroNomeCliente}! Aqui é da WinCar 🚗 Estamos entrando em contato sobre seu agendamento de {$ag['servico']}.";
+                                            }
+
+                                            $linkWpp = "https://wa.me/55{$telefoneLimpo}?text=" . urlencode($mensagemWpp);
+                                        ?>
+                                        <?php if (!empty($telefoneLimpo)): ?>
+                                            <a href="<?php echo $linkWpp; ?>" target="_blank" rel="noopener" class="btn btn-success btn-sm rounded-pill" title="Enviar mensagem via WhatsApp">
+                                                <i class="bi bi-whatsapp"></i>
+                                            </a>
+                                        <?php else: ?>
+                                            <span class="text-muted small">—</span>
+                                        <?php endif; ?>
+                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="8" class="text-center text-muted py-5">
+                                <td colspan="9" class="text-center text-muted py-5">
                                     Nenhum agendamento encontrado.
                                 </td>
                             </tr>
