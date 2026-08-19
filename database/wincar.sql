@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 18/08/2026 às 12:27
+-- Tempo de geração: 19/08/2026 às 02:14
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -80,18 +80,19 @@ CREATE TABLE `servico` (
   `nome` varchar(100) NOT NULL,
   `descricao` text DEFAULT NULL,
   `preco` varchar(30) NOT NULL,
-  `duracao` int(11) NOT NULL
+  `duracao` int(11) NOT NULL,
+  `imagem` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Despejando dados para a tabela `servico`
 --
 
-INSERT INTO `servico` (`id_servico`, `nome`, `descricao`, `preco`, `duracao`) VALUES
-(1, 'Lavagem Simples', 'Lavagem externa do veículo.', '40.00', 60),
-(2, 'Lavagem Completa', 'Lavagem interna e externa.', '80.00', 120),
-(3, 'Polimento', 'Polimento da pintura do veículo.', '250.00', 240),
-(4, 'Lavagem de Motor', 'Limpeza do compartimento do motor.', '70.00', 90);
+INSERT INTO `servico` (`id_servico`, `nome`, `descricao`, `preco`, `duracao`, `imagem`) VALUES
+(1, 'Lavagem Simples', 'Lavagem externa do veículo.', '40.00', 60, 'lavando1.jpg'),
+(2, 'Lavagem Completa', 'Lavagem interna e externa.', '80.00', 120, 'lavando2.jpg'),
+(3, 'Polimento', 'Polimento da pintura do veículo.', '250.00', 240, 'polimento1.jpg'),
+(4, 'Lavagem de Motor', 'Limpeza do compartimento do motor.', '70.00', 90, 'lavagemmotor1.webp');
 
 -- --------------------------------------------------------
 
@@ -123,7 +124,6 @@ INSERT INTO `veiculo` (`id_veiculo`, `id_cliente`, `placa`, `modelo`, `created_a
 --
 ALTER TABLE `agendamento`
   ADD PRIMARY KEY (`id_agendamento`),
-  ADD UNIQUE KEY `data` (`data`,`hora`),
   ADD KEY `fk_cliente` (`id_cliente`),
   ADD KEY `fk_servico` (`id_servico`);
 
