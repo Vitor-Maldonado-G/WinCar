@@ -15,7 +15,8 @@ try {
     $conexao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 } catch (PDOException $erro) {
-    die("Erro na conexão: " . $erro->getMessage());
+    error_log("Erro na conexão com o banco: " . $erro->getMessage());
+    die("Não foi possível conectar ao sistema no momento. Tente novamente em instantes.");
 }
 
 ?>

@@ -5,14 +5,23 @@ require_once 'config/conexao.php';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Recebe e limpa os dados do formulário
-    $nome     = trim($_POST['nome'] ?? '');
-    $email    = trim($_POST['email'] ?? '');
-    $telefone = trim($_POST['telefone'] ?? '');
-    $senha    = $_POST['senha'] ?? '';
+    $nome            = trim($_POST['nome'] ?? '');
+    $email           = trim($_POST['email'] ?? '');
+    $telefone        = trim($_POST['telefone'] ?? '');
+    $senha           = $_POST['senha'] ?? '';
+    $confirmarSenha  = $_POST['confirmar_senha'] ?? '';
 
     // Validação da senha no servidor (mín. 6 chars, 1 maiúscula, 1 número)
     if (strlen($senha) < 6 || !preg_match('/[A-Z]/', $senha) || !preg_match('/[0-9]/', $senha)) {
         $_SESSION['mensagem'] = "A senha deve ter no mínimo 6 caracteres, contendo pelo menos uma letra maiúscula e um número.";
+        $_SESSION['tipo_mensagem'] = "danger";
+        header("Location: cadastro.php");
+        exit();
+    }
+
+    // Confere se a confirmação bate com a senha digitada
+    if ($senha !== $confirmarSenha) {
+        $_SESSION['mensagem'] = "As senhas não coincidem. Tente novamente.";
         $_SESSION['tipo_mensagem'] = "danger";
         header("Location: cadastro.php");
         exit();

@@ -73,6 +73,24 @@ include 'includes/header.php';
                         </div>
                     </div>
 
+                    <div class="mb-3">
+                        <label for="confirmar_senha" class="form-label fw-bold text-white">Confirmar Senha</label>
+                        <div class="input-group has-validation">
+                            <input type="password" 
+                                class="form-control" 
+                                id="confirmar_senha" 
+                                name="confirmar_senha" 
+                                placeholder="Repita a senha" 
+                                required>
+                            <button class="btn btn-outline-light" type="button" onclick="alternarSenha('confirmar_senha', this)">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                            <div class="invalid-feedback">
+                                As senhas não coincidem.
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="d-grid mt-4">
                         <button type="submit" class="btn btn-light text-primary fw-bold btn-lg">Cadastrar</button>
                     </div>
@@ -110,18 +128,41 @@ function validarSenha(senha) {
 // Intercepta o envio do formulário
 document.getElementById('formCadastro').addEventListener('submit', function(e) {
     const senhaInput = document.getElementById('senha');
+    const confirmarSenhaInput = document.getElementById('confirmar_senha');
     const senha = senhaInput.value;
+    const confirmarSenha = confirmarSenhaInput.value;
+
+    let valido = true;
 
     if (!validarSenha(senha)) {
-        e.preventDefault();
         senhaInput.classList.add('is-invalid');
-        senhaInput.focus();
+        valido = false;
     } else {
         senhaInput.classList.remove('is-invalid');
+    }
+
+    if (senha !== confirmarSenha) {
+        confirmarSenhaInput.classList.add('is-invalid');
+        valido = false;
+    } else {
+        confirmarSenhaInput.classList.remove('is-invalid');
+    }
+
+    if (!valido) {
+        e.preventDefault();
+        if (senhaInput.classList.contains('is-invalid')) {
+            senhaInput.focus();
+        } else {
+            confirmarSenhaInput.focus();
+        }
     }
 });
 
 document.getElementById('senha').addEventListener('input', function() {
+    this.classList.remove('is-invalid');
+});
+
+document.getElementById('confirmar_senha').addEventListener('input', function() {
     this.classList.remove('is-invalid');
 });
 </script>
