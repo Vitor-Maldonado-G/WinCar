@@ -92,7 +92,7 @@ include 'includes/header.php';
                     </div>
 
                     <div class="d-grid mt-4">
-                        <button type="submit" class="btn btn-light text-primary fw-bold btn-lg">Cadastrar</button>
+                        <button type="submit" class="btn btn-light text-primary fw-bold btn-lg" id="btnCadastrar">Cadastrar</button>
                     </div>
 
                 </form>
@@ -155,6 +155,10 @@ document.getElementById('formCadastro').addEventListener('submit', function(e) {
         } else {
             confirmarSenhaInput.focus();
         }
+    } else {
+        const botao = document.getElementById('btnCadastrar');
+        botao.disabled = true;
+        botao.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Cadastrando...';
     }
 });
 

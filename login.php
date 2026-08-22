@@ -19,7 +19,7 @@
                 
                 <h3 class="card-title text-center mb-4 fw-bold">Acesse sua Conta</h3>
                 
-                <form action="processa_login.php" method="POST">
+                <form action="processa_login.php" method="POST" id="formLogin">
                     
                     <div class="mb-3">
                         <label for="email" class="form-label">E-mail</label>
@@ -37,7 +37,7 @@
                     </div>
 
                     <div class="d-grid">
-                        <button type="submit" class="btn btn-light text-primary fw-bold btn-lg">Entrar</button>
+                        <button type="submit" class="btn btn-light text-primary fw-bold btn-lg" id="btnEntrar">Entrar</button>
                     </div>
 
                 </form>
@@ -51,5 +51,14 @@
             </div>
         </div>
     </div>
-</div> 
+</div>
+
+<script>
+    document.getElementById('formLogin').addEventListener('submit', function() {
+        const botao = document.getElementById('btnEntrar');
+        botao.disabled = true;
+        botao.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Entrando...';
+    });
+</script>
+
 <?php include 'includes/footer.php'; ?>
