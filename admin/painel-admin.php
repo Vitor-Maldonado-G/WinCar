@@ -206,6 +206,21 @@ try {
 
 </div>
 
+<div class="modal fade" id="modalConfirmarStatus" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0 shadow">
+            <div class="modal-body p-4 text-center">
+                <i class="bi bi-exclamation-triangle-fill text-warning mb-3" style="font-size: 2.5rem;"></i>
+                <p class="fs-5 mb-0" id="modalConfirmarStatusTexto">Tem certeza?</p>
+            </div>
+            <div class="modal-footer border-0 p-4 pt-0 justify-content-center gap-2">
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-4" id="btnCancelarStatus" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary rounded-pill px-4" id="btnConfirmarStatus">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <footer class="bg-dark text-white text-center py-3 mt-auto">
     <p class="mb-0">&copy; 2026 WinCar - Todos os direitos reservados.</p>
 </footer>
@@ -241,25 +256,50 @@ try {
         atualizarIconeTema();
     });
 
+    // Modal de confirmação estilizado (substitui o confirm() nativo do navegador)
+    const modalConfirmar = new bootstrap.Modal(document.getElementById('modalConfirmarStatus'));
+    const modalTexto = document.getElementById('modalConfirmarStatusTexto');
+    const btnConfirmar = document.getElementById('btnConfirmarStatus');
+    let selectPendente = null;
+    let valorOriginalPendente = null;
+
     function confirmarMudancaStatus(select) {
         const statusCritico = ['Cancelado', 'Concluido'];
         const valorOriginal = select.dataset.statusAtual;
         const novoValor = select.value;
 
         if (statusCritico.includes(novoValor) && novoValor !== valorOriginal) {
-            const confirmou = confirm(
-                novoValor === 'Cancelado'
-                    ? 'Confirma o cancelamento deste agendamento?'
-                    : 'Confirma que este serviço foi concluído?'
-            );
-            if (!confirmou) {
-                select.value = valorOriginal; // volta pro valor original se desistir
-                return;
-            }
+            selectPendente = select;
+            valorOriginalPendente = valorOriginal;
+
+            modalTexto.textContent = novoValor === 'Cancelado'
+                ? 'Confirma o cancelamento deste agendamento?'
+                : 'Confirma que este serviço foi concluído?';
+
+            modalConfirmar.show();
+            return;
         }
 
         select.form.submit();
     }
+
+    btnConfirmar.addEventListener('click', function() {
+        const formParaEnviar = selectPendente ? selectPendente.form : null;
+        selectPendente = null; // evita que o evento de fechar o modal reverta o valor
+        modalConfirmar.hide();
+        if (formParaEnviar) {
+            formParaEnviar.submit();
+        }
+    });
+
+    document.getElementById('modalConfirmarStatus').addEventListener('hidden.bs.modal', function() {
+        // Só reverte se o modal foi fechado SEM confirmar (Cancelar, X, ou clique fora)
+        if (selectPendente) {
+            selectPendente.value = valorOriginalPendente;
+        }
+        selectPendente = null;
+        valorOriginalPendente = null;
+    });
 
     document.querySelectorAll('.filtro-btn').forEach(function (botao) {
         botao.addEventListener('click', function () {
