@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Tempo de geração: 19/08/2026 às 02:56
--- Versão do servidor: 10.4.32-MariaDB
--- Versão do PHP: 8.2.12
+-- Host: 127.0.0.1:3306
+-- Tempo de geração: 28/08/2026 às 18:05
+-- Versão do servidor: 9.1.0
+-- Versão do PHP: 8.3.14
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -28,25 +28,27 @@ SET time_zone = "+00:00";
 --
 
 DROP TABLE IF EXISTS `agendamento`;
-CREATE TABLE `agendamento` (
-  `id_agendamento` int(11) NOT NULL,
-  `id_cliente` int(11) NOT NULL,
-  `id_servico` int(11) NOT NULL,
-  `placa` varchar(8) NOT NULL,
-  `modelo` varchar(50) NOT NULL,
+CREATE TABLE IF NOT EXISTS `agendamento` (
+  `id_agendamento` int NOT NULL AUTO_INCREMENT,
+  `id_cliente` int NOT NULL,
+  `id_servico` int NOT NULL,
+  `placa` varchar(8) COLLATE utf8mb4_general_ci NOT NULL,
+  `modelo` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
   `data` date NOT NULL,
   `hora` time NOT NULL,
-  `status` enum('Pendente','Confirmado','Concluido','Cancelado') DEFAULT 'Pendente',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `status` enum('Pendente','Confirmado','Concluido','Cancelado') COLLATE utf8mb4_general_ci DEFAULT 'Pendente',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_agendamento`),
+  KEY `fk_cliente` (`id_cliente`),
+  KEY `fk_servico` (`id_servico`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Despejando dados para a tabela `agendamento`
 --
 
 INSERT INTO `agendamento` (`id_agendamento`, `id_cliente`, `id_servico`, `placa`, `modelo`, `data`, `hora`, `status`, `created_at`) VALUES
-(3, 7, 3, 'NEG0244', 'Toyota Corolla', '2026-08-18', '08:00:00', 'Pendente', '2026-08-18 01:57:40'),
-(4, 7, 4, 'ABC1234', 'Chevrolet S10', '2026-08-29', '16:00:00', 'Pendente', '2026-08-19 00:49:41');
+(5, 10, 9, 'BRU6767', 'Ford Mustang 2008', '2026-08-31', '08:00:00', 'Concluido', '2026-08-28 18:00:49');
 
 -- --------------------------------------------------------
 
@@ -55,22 +57,24 @@ INSERT INTO `agendamento` (`id_agendamento`, `id_cliente`, `id_servico`, `placa`
 --
 
 DROP TABLE IF EXISTS `cliente`;
-CREATE TABLE `cliente` (
-  `id_cliente` int(11) NOT NULL,
-  `nome` varchar(100) NOT NULL,
-  `email` varchar(100) NOT NULL,
-  `telefone` varchar(20) NOT NULL,
-  `senha` varchar(255) NOT NULL,
-  `tipo_usuario` enum('admin','cliente') DEFAULT 'cliente'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+CREATE TABLE IF NOT EXISTS `cliente` (
+  `id_cliente` int NOT NULL AUTO_INCREMENT,
+  `nome` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `email` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `telefone` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
+  `senha` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `tipo_usuario` enum('admin','cliente') COLLATE utf8mb4_general_ci DEFAULT 'cliente',
+  PRIMARY KEY (`id_cliente`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Despejando dados para a tabela `cliente`
 --
 
 INSERT INTO `cliente` (`id_cliente`, `nome`, `email`, `telefone`, `senha`, `tipo_usuario`) VALUES
-(7, 'Emanuel trueadam', 'emanuelteste@gmail.com', '(11) 99999-9999', '$2y$10$3IxkNX0tDIZboIZiR1suoetg2/6NDowQ8RDaqY.GKBI2vERDhvR8O', 'cliente'),
-(8, 'Vitor Lindo', 'vitorteste@gmail.com', '(11) 99999-9999', '$2y$10$micIjz58L6eDon.73tzN9.KqtFG6z9ylRyOt3JaoxBUxYlm2UtDem', 'cliente');
+(10, 'Bruno Otávio', 'bruno@gmail.com', '(19) 99556-2867', '$2y$10$M0apyH1pSIU7dkAqLKcV/Os4nl7TSLRSdkDBURV8q5ukBt455BWSy', 'cliente'),
+(11, 'Perfil ADM', 'adm@gmail.com', '(11) 11111-1111', '$2y$10$19GnBwnlZny.y9oFRt6uQeMMtQk9zVKyvcyxUTGsjB6tAKa05RbFm', 'admin');
 
 -- --------------------------------------------------------
 
@@ -79,24 +83,31 @@ INSERT INTO `cliente` (`id_cliente`, `nome`, `email`, `telefone`, `senha`, `tipo
 --
 
 DROP TABLE IF EXISTS `servico`;
-CREATE TABLE `servico` (
-  `id_servico` int(11) NOT NULL,
-  `nome` varchar(100) NOT NULL,
-  `descricao` text DEFAULT NULL,
-  `preco` varchar(30) NOT NULL,
-  `duracao` int(11) NOT NULL,
-  `imagem` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+CREATE TABLE IF NOT EXISTS `servico` (
+  `id_servico` int NOT NULL AUTO_INCREMENT,
+  `nome` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `descricao` text COLLATE utf8mb4_general_ci,
+  `preco` varchar(30) COLLATE utf8mb4_general_ci NOT NULL,
+  `duracao` int NOT NULL,
+  `categoria` enum('Simples','Intermediário','Premium') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'Simples',
+  `imagem` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  PRIMARY KEY (`id_servico`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Despejando dados para a tabela `servico`
 --
 
-INSERT INTO `servico` (`id_servico`, `nome`, `descricao`, `preco`, `duracao`, `imagem`) VALUES
-(1, 'Lavagem Simples', 'Lavagem externa do veículo.', '40.00', 60, 'lavando1.jpg'),
-(2, 'Lavagem Completa', 'Lavagem interna e externa.', '80.00', 120, 'lavando2.jpg'),
-(3, 'Polimento', 'Polimento da pintura do veículo.', '250.00', 240, 'polimento1.jpg'),
-(4, 'Lavagem de Motor', 'Limpeza do compartimento do motor.', '70.00', 90, 'lavagemmotor1.webp');
+INSERT INTO `servico` (`id_servico`, `nome`, `descricao`, `preco`, `duracao`, `categoria`, `imagem`) VALUES
+(1, 'Lavagem Externa', 'Lavagem da carroceria, rodas e pneus.', '35.00', 45, 'Simples', 'lavando1.jpg'),
+(2, 'Lavagem + Aspiração', 'Lavagem externa e aspiração do interior.', '50.00', 60, 'Simples', 'lavando1.jpg'),
+(3, 'Lavagem Completa', 'Externa + aspiração + limpeza básica do painel e vidros.', '65.00', 90, 'Simples', 'lavando2.jpg'),
+(4, 'Lavagem Completa + Higienização Interna', 'Limpeza mais profunda de bancos, carpetes, painel e portas.', '110.00', 150, 'Intermediário', 'lavando2.jpg'),
+(5, 'Lavagem + Enceramento', 'Lavagem completa com aplicação de cera para brilho e proteção.', '120.00', 150, 'Intermediário', 'lavando2.jpg'),
+(6, 'Lavagem Técnica', 'Limpeza mais detalhada da carroceria, rodas, pneus, caixas de roda e interior.', '140.00', 180, 'Intermediário', 'lavagemmotor1.webp'),
+(7, 'Polimento Técnico', 'Tratamento da pintura para recuperar brilho e reduzir riscos e marcas leves.', '220.00', 240, 'Premium', 'polimento1.jpg'),
+(8, 'Polimento + Proteção de Pintura', 'Polimento técnico seguido de selante ou proteção cerâmica.', '320.00', 300, 'Premium', 'polimento1.jpg'),
+(9, 'Detailing Completo', 'Limpeza e detalhamento minucioso do interior e exterior, incluindo pintura, rodas, vidros, plásticos e acabamento.', '380.00', 360, 'Premium', 'polimento1.jpg');
 
 -- --------------------------------------------------------
 
@@ -105,82 +116,23 @@ INSERT INTO `servico` (`id_servico`, `nome`, `descricao`, `preco`, `duracao`, `i
 --
 
 DROP TABLE IF EXISTS `veiculo`;
-CREATE TABLE `veiculo` (
-  `id_veiculo` int(11) NOT NULL,
-  `id_cliente` int(11) NOT NULL,
-  `placa` varchar(8) NOT NULL,
-  `modelo` varchar(60) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+CREATE TABLE IF NOT EXISTS `veiculo` (
+  `id_veiculo` int NOT NULL AUTO_INCREMENT,
+  `id_cliente` int NOT NULL,
+  `placa` varchar(8) COLLATE utf8mb4_general_ci NOT NULL,
+  `modelo` varchar(60) COLLATE utf8mb4_general_ci NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_veiculo`),
+  UNIQUE KEY `placa` (`placa`),
+  KEY `id_cliente` (`id_cliente`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Despejando dados para a tabela `veiculo`
 --
 
 INSERT INTO `veiculo` (`id_veiculo`, `id_cliente`, `placa`, `modelo`, `created_at`) VALUES
-(1, 7, 'NEG0244', 'Toyota Corolla', '2026-08-18 01:57:40'),
-(2, 7, 'ABC1234', 'Chevrolet S10', '2026-08-19 00:49:41');
-
---
--- Índices para tabelas despejadas
---
-
---
--- Índices de tabela `agendamento`
---
-ALTER TABLE `agendamento`
-  ADD PRIMARY KEY (`id_agendamento`),
-  ADD KEY `fk_cliente` (`id_cliente`),
-  ADD KEY `fk_servico` (`id_servico`);
-
---
--- Índices de tabela `cliente`
---
-ALTER TABLE `cliente`
-  ADD PRIMARY KEY (`id_cliente`),
-  ADD UNIQUE KEY `email` (`email`);
-
---
--- Índices de tabela `servico`
---
-ALTER TABLE `servico`
-  ADD PRIMARY KEY (`id_servico`);
-
---
--- Índices de tabela `veiculo`
---
-ALTER TABLE `veiculo`
-  ADD PRIMARY KEY (`id_veiculo`),
-  ADD UNIQUE KEY `placa` (`placa`),
-  ADD KEY `id_cliente` (`id_cliente`);
-
---
--- AUTO_INCREMENT para tabelas despejadas
---
-
---
--- AUTO_INCREMENT de tabela `agendamento`
---
-ALTER TABLE `agendamento`
-  MODIFY `id_agendamento` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT de tabela `cliente`
---
-ALTER TABLE `cliente`
-  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
-
---
--- AUTO_INCREMENT de tabela `servico`
---
-ALTER TABLE `servico`
-  MODIFY `id_servico` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT de tabela `veiculo`
---
-ALTER TABLE `veiculo`
-  MODIFY `id_veiculo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+(3, 10, 'BRU6767', 'Ford Mustang 2008', '2026-08-28 18:00:49');
 
 --
 -- Restrições para tabelas despejadas

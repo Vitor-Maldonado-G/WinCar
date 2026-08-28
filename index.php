@@ -4,13 +4,29 @@ session_start();
 // Conexão com o banco de dados
 require_once 'config/conexao.php';
 
-// Busca a lista de serviços ativos no banco.
+// Busca a lista de serviços ativos no banco, agrupados por categoria.
 try {
-    $stmt = $conexao->query("SELECT * FROM servico");
+    $stmt = $conexao->query(
+        "SELECT * FROM servico 
+         ORDER BY FIELD(categoria, 'Simples', 'Intermediário', 'Premium'), id_servico"
+    );
     $servicos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     $servicos = [];
 }
+
+// Agrupa os serviços por categoria pra exibir em seções
+$servicosPorCategoria = [];
+foreach ($servicos as $servico) {
+    $servicosPorCategoria[$servico['categoria']][] = $servico;
+}
+
+// Cor de destaque de cada categoria
+$corCategoria = [
+    'Simples'        => 'success',
+    'Intermediário'  => 'warning',
+    'Premium'        => 'danger',
+];
 
 include 'includes/header.php';
 ?>
@@ -75,48 +91,56 @@ include 'includes/header.php';
         <p class="text-muted fs-5">Confira o que oferecemos para deixar seu veículo novo em folha</p>
     </div>
 
-    <div class="row g-4">
-        
-        <?php if (!empty($servicos)): ?>
-            <?php foreach ($servicos as $servico): ?>
-                <div class="col-12 col-md-4">
-                    <div class="card h-100 shadow-sm border-0 rounded-4 overflow-hidden card-servico">
-                        
-                        <img 
-                            src="assets/img/<?php echo !empty($servico['imagem']) ? $servico['imagem'] : 'servico-padrao.jpg'; ?>" 
-                            class="card-img-top img-fluid" 
-                            alt="<?php echo htmlspecialchars($servico['nome']); ?>"
-                            style="height: 200px; object-fit: cover;">
-                        
-                        <div class="card-body d-flex flex-column p-4">
-                            <h4 class="card-title fw-bold text-dark mb-2">
-                                <?php echo htmlspecialchars($servico['nome']); ?>
-                            </h4>
-                            
-                            <p class="card-text text-secondary mb-4 flex-grow-1">
-                                <?php echo htmlspecialchars($servico['descricao'] ?? 'Serviço automotivo completo com a qualidade WinCar.'); ?>
-                            </p>
+    <?php if (!empty($servicosPorCategoria)): ?>
+        <?php foreach ($servicosPorCategoria as $categoria => $itensCategoria): ?>
 
-                            <div class="d-flex justify-content-between align-items-center mt-auto pt-3 border-top">
-                                <span class="fs-4 fw-bold text-primary">
-                                    R$ <?php echo number_format($servico['preco'], 2, ',', '.'); ?>
-                                </span>
-                                <a href="agendar.php" class="btn btn-outline-primary rounded-pill fw-bold">
-                                    Agendar
-                                </a>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <div class="col-12 text-center py-4">
-                <p class="text-muted">Nenhum serviço cadastrado no momento.</p>
+            <div class="d-flex align-items-center gap-2 mb-3">
+                <span class="badge bg-<?php echo $corCategoria[$categoria] ?? 'secondary'; ?> rounded-pill" style="width: 14px; height: 14px; padding: 0;"></span>
+                <h4 class="fw-bold mb-0"><?php echo htmlspecialchars($categoria); ?></h4>
             </div>
-        <?php endif; ?>
 
-    </div>
+            <div class="row g-4 mb-5">
+                <?php foreach ($itensCategoria as $servico): ?>
+                    <div class="col-12 col-md-4">
+                        <div class="card h-100 shadow-sm border-0 rounded-4 overflow-hidden card-servico">
+                            
+                            <img 
+                                src="assets/img/<?php echo !empty($servico['imagem']) ? $servico['imagem'] : 'servico-padrao.jpg'; ?>" 
+                                class="card-img-top img-fluid" 
+                                alt="<?php echo htmlspecialchars($servico['nome']); ?>"
+                                style="height: 200px; object-fit: cover;">
+                            
+                            <div class="card-body d-flex flex-column p-4">
+                                <h4 class="card-title fw-bold text-dark mb-2">
+                                    <?php echo htmlspecialchars($servico['nome']); ?>
+                                </h4>
+                                
+                                <p class="card-text text-secondary mb-4 flex-grow-1">
+                                    <?php echo htmlspecialchars($servico['descricao'] ?? 'Serviço automotivo completo com a qualidade WinCar.'); ?>
+                                </p>
+
+                                <div class="d-flex justify-content-between align-items-center mt-auto pt-3 border-top">
+                                    <span class="fs-4 fw-bold text-primary">
+                                        R$ <?php echo number_format($servico['preco'], 2, ',', '.'); ?>
+                                    </span>
+                                    <a href="agendar.php" class="btn btn-outline-primary rounded-pill fw-bold">
+                                        Agendar
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+
+        <?php endforeach; ?>
+    <?php else: ?>
+        <div class="col-12 text-center py-4">
+            <p class="text-muted">Nenhum serviço cadastrado no momento.</p>
+        </div>
+    <?php endif; ?>
+
 </section>
 
 <?php include 'includes/footer.php'; ?>

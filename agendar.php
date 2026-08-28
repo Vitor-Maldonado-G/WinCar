@@ -9,10 +9,19 @@ if (!isset($_SESSION['usuario_id']) && !isset($_SESSION['usuario_id'])) {
 require_once 'config/conexao.php';
 
 try {
-    $stmtServicos = $conexao->query("SELECT * FROM servico");
+    $stmtServicos = $conexao->query(
+        "SELECT * FROM servico 
+         ORDER BY FIELD(categoria, 'Simples', 'Intermediário', 'Premium'), id_servico"
+    );
     $servicos = $stmtServicos->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     $servicos = [];
+}
+
+// Agrupa por categoria pra montar os <optgroup> do select
+$servicosPorCategoria = [];
+foreach ($servicos as $servico) {
+    $servicosPorCategoria[$servico['categoria']][] = $servico;
 }
 
 include 'includes/header.php';
@@ -123,13 +132,17 @@ include 'includes/header.php';
                     <label for="id_servico" class="form-label fw-bold">Serviço Desejado</label>
                     <select class="form-select" id="id_servico" name="id_servico" required>
                         <option value="" selected disabled>Selecione um serviço...</option>
-                        <?php foreach ($servicos as $servico): ?>
-                            <option value="<?php echo $servico['id_servico']; ?>">
-                                <?php echo $servico['nome'] ?? $servico['nome_servico']; ?> 
-                                <?php if (isset($servico['preco'])): ?>
-                                    - R$ <?php echo number_format($servico['preco'], 2, ',', '.'); ?>
-                                <?php endif; ?>
-                            </option>
+                        <?php foreach ($servicosPorCategoria as $categoria => $itensCategoria): ?>
+                            <optgroup label="<?php echo htmlspecialchars($categoria); ?>">
+                                <?php foreach ($itensCategoria as $servico): ?>
+                                    <option value="<?php echo $servico['id_servico']; ?>">
+                                        <?php echo $servico['nome'] ?? $servico['nome_servico']; ?> 
+                                        <?php if (isset($servico['preco'])): ?>
+                                            - R$ <?php echo number_format($servico['preco'], 2, ',', '.'); ?>
+                                        <?php endif; ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </optgroup>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -172,7 +185,7 @@ include 'includes/header.php';
                 </div>
 
                 <div class="d-grid mt-4">
-                    <button type="submit" class="btn btn-primary btn-lg fw-bold" id="btnConfirmarAgendamento">Confirmar Agendamento</button>
+                    <button type="submit" class="btn btn-primary btn-lg fw-bold">Confirmar Agendamento</button>
                 </div>
 
             </form>
@@ -310,10 +323,6 @@ include 'includes/header.php';
         }
         return false;
     }
-
-    const botao = document.getElementById('btnConfirmarAgendamento');
-    botao.disabled = true;
-    botao.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Enviando...';
 
     return true;
 }
