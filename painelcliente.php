@@ -158,11 +158,13 @@ include 'includes/header.php';
 
                                     <td class="text-center">
                                         <?php if ($agendamento['status'] != 'Cancelado' && $agendamento['status'] != 'Concluido' && $agendamento['status'] != 'Concluído'): ?>
-                                            <a href="cancelar.php?id=<?php echo $agendamento['id_agendamento']; ?>" 
+                                            <button type="button"
                                                class="btn btn-sm btn-outline-danger rounded-pill px-3 fw-bold"
-                                               onclick="return confirm('Tem certeza que deseja cancelar este agendamento?');">
+                                               data-bs-toggle="modal"
+                                               data-bs-target="#modalCancelarAgendamento"
+                                               data-id-agendamento="<?php echo $agendamento['id_agendamento']; ?>">
                                                 Cancelar
-                                            </a>
+                                            </button>
                                         <?php else: ?>
                                             <span class="text-muted small">-</span>
                                         <?php endif; ?>
@@ -179,6 +181,36 @@ include 'includes/header.php';
     </div>
 
 </div>
+
+<!-- Modal de confirmação de cancelamento -->
+<div class="modal fade" id="modalCancelarAgendamento" tabindex="-1" aria-labelledby="modalCancelarAgendamentoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0 shadow">
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold" id="modalCancelarAgendamentoLabel">Cancelar agendamento</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                Tem certeza que deseja cancelar este agendamento? Essa ação não pode ser desfeita.
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Voltar</button>
+                <a href="#" id="btnConfirmarCancelamento" class="btn btn-danger rounded-pill px-4 fw-bold">Sim, cancelar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Ao abrir o modal, monta o link de cancelamento com o id do agendamento clicado
+    const modalCancelar = document.getElementById('modalCancelarAgendamento');
+    modalCancelar.addEventListener('show.bs.modal', function(evento) {
+        const botaoClicado = evento.relatedTarget;
+        const idAgendamento = botaoClicado.getAttribute('data-id-agendamento');
+        const btnConfirmar = document.getElementById('btnConfirmarCancelamento');
+        btnConfirmar.href = 'cancelar.php?id=' + encodeURIComponent(idAgendamento);
+    });
+</script>
 
 <script>
     // Atualiza a página automaticamente a cada 30 segundos,
