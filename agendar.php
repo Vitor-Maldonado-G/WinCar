@@ -185,7 +185,7 @@ include 'includes/header.php';
                 </div>
 
                 <div class="d-grid mt-4">
-                    <button type="submit" class="btn btn-primary btn-lg fw-bold">Confirmar Agendamento</button>
+                    <button type="submit" class="btn btn-primary btn-lg fw-bold" id="btnConfirmarAgendamento">Confirmar Agendamento</button>
                 </div>
 
             </form>
@@ -323,6 +323,10 @@ include 'includes/header.php';
         }
         return false;
     }
+
+    const botao = document.getElementById('btnConfirmarAgendamento');
+    botao.disabled = true;
+    botao.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Enviando...';
 
     return true;
 }

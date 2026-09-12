@@ -143,4 +143,49 @@ include 'includes/header.php';
 
 </section>
 
+<section class="container mb-5" aria-labelledby="titulo-pagamento">
+    <div class="text-center mb-4">
+        <h2 id="titulo-pagamento" class="fw-bold text-primary">Formas de Pagamento</h2>
+        <p class="text-muted">O pagamento é realizado exclusivamente no local, na retirada do veículo.</p>
+    </div>
+    <div class="row g-4">
+        <div class="col-12 col-md-4">
+            <div class="card card-pagamento h-100 text-center p-4">
+                <i class="bi bi-cash-stack fs-1 text-primary mb-3" aria-hidden="true"></i>
+                <h3 class="h5 fw-bold mb-0">Dinheiro</h3>
+            </div>
+        </div>
+        <div class="col-12 col-md-4">
+            <div class="card card-pagamento h-100 text-center p-4">
+                <i class="bi bi-credit-card fs-1 text-primary mb-3" aria-hidden="true"></i>
+                <h3 class="h5 fw-bold mb-0">Cartão</h3>
+            </div>
+        </div>
+        <div class="col-12 col-md-4">
+            <div class="card card-pagamento h-100 text-center p-4">
+                <i class="bi bi-qr-code fs-1 text-primary mb-3" aria-hidden="true"></i>
+                <h3 class="h5 fw-bold mb-0">Pix</h3>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container mb-5 pt-4 border-top" aria-labelledby="titulo-contato">
+    <h2 id="titulo-contato" class="fw-bold text-primary text-center mb-4">Contato &amp; Horários</h2>
+    <div class="row g-4">
+        <div class="col-12 col-md-6">
+            <h3 class="h5 fw-bold"><i class="bi bi-chat-dots text-primary me-2" aria-hidden="true"></i>Contato</h3>
+            <p class="mb-2">Telefone: (11) 0000-0000</p>
+            <p class="mb-2">E-mail: contato@wincar.example</p>
+            <p class="text-muted mb-0">Contatos fictícios para demonstração.</p>
+        </div>
+        <div class="col-12 col-md-6">
+            <h3 class="h5 fw-bold"><i class="bi bi-clock text-primary me-2" aria-hidden="true"></i>Horários de agendamento</h3>
+            <p class="mb-2">Segunda a sábado: das 08h às 11h e das 13h às 17h.</p>
+            <p class="mb-2">Domingo: fechado.</p>
+            <p class="text-muted mb-0">Consulte os horários disponíveis ao agendar.</p>
+        </div>
+    </div>
+</section>
+
 <?php include 'includes/footer.php'; ?>

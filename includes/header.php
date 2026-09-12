@@ -46,10 +46,10 @@ if (session_status() === PHP_SESSION_NONE) {
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
 
-    <span class="navbar-brand fw-bold d-flex align-items-center">
+    <a href="index.php" class="navbar-brand fw-bold d-flex align-items-center" aria-label="WinCar - Página inicial">
       <img src="assets/img/logowincar.png" alt="WinCar Logo" height="40" class="me-2">
       WinCar
-    </span>
+    </a>
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarWinCar" aria-controls="navbarWinCar" aria-expanded="false" aria-label="Alternar navegação">
       <span class="navbar-toggler-icon"></span>
@@ -58,9 +58,6 @@ if (session_status() === PHP_SESSION_NONE) {
     <div class="collapse navbar-collapse" id="navbarWinCar">
 
       <ul class="navbar-nav flex-lg-row gap-lg-3 mx-lg-4">
-        <li class="nav-item">
-          <a class="nav-link text-white fw-bold fs-5" href="index.php">Tela inicial</a>
-        </li>
         <?php if (isset($_SESSION['usuario_nome'])): ?>
         <li class="nav-item">
           <a class="nav-link text-white fw-bold fs-5" href="painelcliente.php">Meus Agendamentos</a>

@@ -13,6 +13,30 @@
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12) !important;
 }
 
+.card.card-pagamento {
+  border: 2px solid transparent;
+  border-radius: 8px;
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+@media (hover: hover) {
+  .card.card-pagamento:hover {
+    border-color: var(--bs-primary);
+    transform: translateY(-5px);
+    box-shadow: 0 12px 28px rgba(var(--bs-primary-rgb), 0.22) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card.card-pagamento {
+    transition: none;
+  }
+
+  .card.card-pagamento:hover {
+    transform: none;
+  }
+}
+
 [data-bs-theme="dark"] .card.bg-primary {
   background-color: #1d4ed8 !important;
 }
