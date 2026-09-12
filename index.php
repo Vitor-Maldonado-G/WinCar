@@ -119,13 +119,22 @@ include 'includes/header.php';
                                     <?php echo htmlspecialchars($servico['descricao'] ?? 'Serviço automotivo completo com a qualidade WinCar.'); ?>
                                 </p>
 
+                                <?php if (!empty($servico['duracao'])): ?>
+                                    <p class="text-secondary small mb-3">
+                                        <i class="bi bi-clock me-1" aria-hidden="true"></i>
+                                        Duração estimada: <?php echo (int) $servico['duracao']; ?> min
+                                    </p>
+                                <?php endif; ?>
+
                                 <div class="d-flex justify-content-between align-items-center mt-auto pt-3 border-top">
                                     <span class="fs-4 fw-bold text-primary">
                                         R$ <?php echo number_format($servico['preco'], 2, ',', '.'); ?>
                                     </span>
+                                    <?php if (($_SESSION['tipo_usuario'] ?? '') !== 'admin'): ?>
                                     <a href="agendar.php" class="btn btn-outline-primary rounded-pill fw-bold">
                                         Agendar
                                     </a>
+                                    <?php endif; ?>
                                 </div>
                             </div>
 

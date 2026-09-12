@@ -58,7 +58,11 @@ if (session_status() === PHP_SESSION_NONE) {
     <div class="collapse navbar-collapse" id="navbarWinCar">
 
       <ul class="navbar-nav flex-lg-row gap-lg-3 mx-lg-4">
-        <?php if (isset($_SESSION['usuario_nome'])): ?>
+        <?php if (($_SESSION['tipo_usuario'] ?? '') === 'admin'): ?>
+        <li class="nav-item">
+          <a class="nav-link text-white fw-bold fs-5" href="admin/painel-admin.php">Painel Administrativo</a>
+        </li>
+        <?php elseif (isset($_SESSION['usuario_nome'])): ?>
         <li class="nav-item">
           <a class="nav-link text-white fw-bold fs-5" href="painelcliente.php">Meus Agendamentos</a>
         </li>

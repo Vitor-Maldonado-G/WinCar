@@ -65,10 +65,10 @@ try {
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
 
-    <span class="navbar-brand fw-bold d-flex align-items-center">
+    <a href="../index.php" class="navbar-brand fw-bold d-flex align-items-center" aria-label="WinCar - Página inicial">
       <img src="../assets/img/logowincar.png" alt="WinCar Logo" height="40" class="me-2">
       WinCar <span class="badge bg-primary ms-2 fs-6">Admin</span>
-    </span>
+    </a>
 
     <div class="d-flex align-items-center gap-3">
       <button class="btn btn-outline-light btn-sm" id="toggleTema" type="button" title="Alternar tema">
