@@ -72,7 +72,7 @@ include 'includes/header.php';
             </div>
         </div>
         <div class="col-12 col-lg-6">
-            <div class="alert alert-primary mb-0" role="note">
+            <div class="bg-primary text-white p-4 rounded-3" role="note">
                 <h2 class="h5 fw-bold mb-2"><i class="bi bi-mortarboard-fill me-2" aria-hidden="true"></i>Projeto de TCC</h2>
                 <p class="mb-0">
                     A empresa WinCar é fictícia. Este sistema foi desenvolvido exclusivamente para fins acadêmicos e demonstrativos, sem realizar transações financeiras ou atendimentos reais.
