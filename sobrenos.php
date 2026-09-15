@@ -35,21 +35,21 @@ include 'includes/header.php';
 
         <div class="row g-4">
             <div class="col-12 col-md-4">
-                <div class="card h-100 p-4 text-center rounded-3">
+                <div class="card card-pagamento h-100 p-4 text-center rounded-3">
                     <i class="bi bi-search fs-2 text-primary mb-3" aria-hidden="true"></i>
                     <h3 class="h5 fw-bold">Consultar serviços</h3>
                     <p class="text-secondary mb-0">Visualizar opções, preços e duração estimada.</p>
                 </div>
             </div>
             <div class="col-12 col-md-4">
-                <div class="card h-100 p-4 text-center rounded-3">
+                <div class="card card-pagamento h-100 p-4 text-center rounded-3">
                     <i class="bi bi-calendar-check fs-2 text-primary mb-3" aria-hidden="true"></i>
                     <h3 class="h5 fw-bold">Fazer agendamentos</h3>
                     <p class="text-secondary mb-0">Escolher o serviço, a data e o horário desejados.</p>
                 </div>
             </div>
             <div class="col-12 col-md-4">
-                <div class="card h-100 p-4 text-center rounded-3">
+                <div class="card card-pagamento h-100 p-4 text-center rounded-3">
                     <i class="bi bi-list-check fs-2 text-primary mb-3" aria-hidden="true"></i>
                     <h3 class="h5 fw-bold">Acompanhar atendimentos</h3>
                     <p class="text-secondary mb-0">Consultar o histórico e o status de cada agendamento.</p>
