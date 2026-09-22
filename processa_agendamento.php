@@ -47,6 +47,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         emitirMensagem("Todos os campos são obrigatórios.", "danger", "agendar.php");
     }
 
+    if (!is_string($data) || !preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $data, $partesData)
+        || !checkdate((int) $partesData[2], (int) $partesData[3], (int) $partesData[1])) {
+        emitirMensagem("Informe uma data válida.", "danger", "agendar.php");
+    }
+
+    if (date('w', strtotime($data)) === '0') {
+        emitirMensagem("A WinCar não realiza atendimentos aos domingos. Escolha outra data.", "warning", "agendar.php");
+    }
+
     if (!preg_match('/^[A-Z]{3}[0-9]{1}[A-Z0-9]{1}[0-9]{2}$/', $placa)) {
         emitirMensagem("Formato de placa inválido. Insira uma placa válida (ex: ABC1234 ou ABC1D23).", "danger", "agendar.php");
     }

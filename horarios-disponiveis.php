@@ -31,6 +31,10 @@ if (!checkdate((int) $partes[2], (int) $partes[3], (int) $partes[1])) {
     responderJson(['erro' => 'Data inválida.'], 400);
 }
 
+if (date('w', strtotime($data)) === '0') {
+    responderJson(['erro' => 'A WinCar não realiza atendimentos aos domingos.'], 400);
+}
+
 require_once 'config/conexao.php';
 
 try {

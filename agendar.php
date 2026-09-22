@@ -165,6 +165,7 @@ include 'includes/header.php';
                                 onkeydown="return false"
                                 onclick="this.showPicker()" 
                                 required>
+                        <div class="invalid-feedback">A WinCar não realiza atendimentos aos domingos.</div>
                     </div>
 
                     <div class="col-md-6 mb-3">
@@ -262,7 +263,16 @@ include 'includes/header.php';
 
     campoData.addEventListener('change', function() {
         const dataEscolhida = this.value;
+        this.classList.remove('is-invalid');
         if (!dataEscolhida) return;
+
+        const dataSelecionada = new Date(dataEscolhida + 'T00:00:00');
+        if (dataSelecionada.getDay() === 0) {
+            this.classList.add('is-invalid');
+            campoHora.innerHTML = '<option value="" selected disabled>Fechado aos domingos</option>';
+            campoHora.disabled = true;
+            return;
+        }
 
         campoHora.disabled = true;
         campoHora.innerHTML = '<option value="" selected disabled>Carregando horários...</option>';
@@ -306,6 +316,13 @@ include 'includes/header.php';
     });
 
     function validarFormulario() {
+    const dataInput = document.getElementById('data');
+    if (dataInput.value && new Date(dataInput.value + 'T00:00:00').getDay() === 0) {
+        dataInput.classList.add('is-invalid');
+        dataInput.focus();
+        return false;
+    }
+
     const placaInput = document.getElementById('placa');
     const placa = placaInput.value.trim();
     const regexPlaca = /^[A-Z]{3}[0-9]{1}[A-Z0-9]{1}[0-9]{2}$/;
