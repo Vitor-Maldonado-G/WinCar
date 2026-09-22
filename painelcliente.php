@@ -9,6 +9,10 @@ if (!isset($_SESSION['usuario_id']) && !isset($_SESSION['usuario_id'])) {
 
 require_once 'config/conexao.php';
 
+if (empty($_SESSION['csrf_perfil'])) {
+    $_SESSION['csrf_perfil'] = bin2hex(random_bytes(32));
+}
+
 $id_cliente = $_SESSION['usuario_id'] ?? $_SESSION['usuario_id'];
 
 // 1. Busca os dados cadastrais do cliente
@@ -67,7 +71,12 @@ include 'includes/header.php';
     <?php if ($cliente): ?>
         <div class="card shadow-sm border-0 rounded-4 mb-4 bg-light">
             <div class="card-body p-4">
-                <h5 class="fw-bold text-dark mb-3">Minhas Informações</h5>
+                <div class="d-flex justify-content-between align-items-center gap-3 mb-3">
+                    <h5 class="fw-bold text-dark mb-0">Minhas Informações</h5>
+                    <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalEditarPerfil">
+                        <i class="bi bi-pencil me-1" aria-hidden="true"></i>Editar
+                    </button>
+                </div>
                 <div class="row g-3">
                     <div class="col-md-4">
                         <span class="text-muted d-block small">Nome:</span>
@@ -182,6 +191,36 @@ include 'includes/header.php';
 
 </div>
 
+<?php if ($cliente): ?>
+<div class="modal fade" id="modalEditarPerfil" tabindex="-1" aria-labelledby="modalEditarPerfilLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0 shadow">
+            <form action="atualizar-perfil.php" method="POST">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold" id="modalEditarPerfilLabel">Editar minhas informações</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_perfil'], ENT_QUOTES, 'UTF-8'); ?>">
+                    <div class="mb-3">
+                        <label for="nomePerfil" class="form-label fw-bold">Nome</label>
+                        <input type="text" class="form-control" id="nomePerfil" name="nome" value="<?php echo htmlspecialchars($cliente['nome'], ENT_QUOTES, 'UTF-8'); ?>" maxlength="100" required>
+                    </div>
+                    <div>
+                        <label for="telefonePerfil" class="form-label fw-bold">Telefone / WhatsApp</label>
+                        <input type="tel" class="form-control" id="telefonePerfil" name="telefone" value="<?php echo htmlspecialchars($cliente['telefone'], ENT_QUOTES, 'UTF-8'); ?>" placeholder="(11) 99999-9999" maxlength="15" pattern="\([0-9]{2}\) [0-9]{5}-[0-9]{4}" oninput="mascaraTelefone(this)" required>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+
 <!-- Modal de confirmação de cancelamento -->
 <div class="modal fade" id="modalCancelarAgendamento" tabindex="-1" aria-labelledby="modalCancelarAgendamentoLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -201,6 +240,7 @@ include 'includes/header.php';
     </div>
 </div>
 
+<script src="assets/js/telefone.js"></script>
 <script>
     // Ao abrir o modal, monta o link de cancelamento com o id do agendamento clicado
     const modalCancelar = document.getElementById('modalCancelarAgendamento');
@@ -215,8 +255,10 @@ include 'includes/header.php';
 <script>
     // Atualiza a página automaticamente a cada 30 segundos,
     // pra refletir mudanças de status feitas pelo admin
-    setTimeout(function() {
-        location.reload();
+    setInterval(function() {
+        if (!document.querySelector('.modal.show')) {
+            location.reload();
+        }
     }, 30000);
 </script>
 

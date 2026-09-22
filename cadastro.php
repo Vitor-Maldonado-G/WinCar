@@ -108,16 +108,8 @@ include 'includes/header.php';
     </div>
 </div>
 
+<script src="assets/js/telefone.js"></script>
 <script>
-// Máscara para o Telefone
-function mascaraTelefone(input) {
-    let v = input.value;
-    v = v.replace(/\D/g, ""); // Remove não dígitos
-    v = v.replace(/^(\d{2})(\d)/g, "($1) $2"); // DDD
-    v = v.replace(/(\d{5})(\d)/, "$1-$2"); // Hífen no celular
-    input.value = v.substring(0, 15);
-}
-
 // Validação de Senha Forte
 function validarSenha(senha) {
     // Regex: mín 6 chars, pelo menos 1 maiúscula (?=.*[A-Z]), pelo menos 1 número (?=.*\d)
