@@ -20,6 +20,11 @@ if (!$id_cliente) {
     emitirMensagem("Sua sessão expirou. Faça login novamente para agendar um serviço.", "warning", "login.php");
 }
 
+if (($_SESSION['tipo_usuario'] ?? '') === 'admin') {
+    header("Location: admin/painel-admin.php");
+    exit();
+}
+
 // Verifica se os dados vieram via POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 

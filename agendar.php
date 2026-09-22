@@ -1,8 +1,13 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['usuario_id']) && !isset($_SESSION['usuario_id'])) {
+if (!isset($_SESSION['usuario_id'])) {
     header("Location: login.php");
+    exit();
+}
+
+if (($_SESSION['tipo_usuario'] ?? '') === 'admin') {
+    header("Location: admin/painel-admin.php");
     exit();
 }
 
