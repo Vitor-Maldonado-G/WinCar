@@ -15,6 +15,19 @@ try {
     $servicos = [];
 }
 
+// Fotos dos serviços exibidos na página inicial.
+$imagensServicos = [
+    'Lavagem Externa' => 'externa.png',
+    'Lavagem + Aspiração' => 'externaaspiração.png',
+    'Lavagem Completa' => 'completa.png',
+    'Lavagem Completa + Higienização Interna' => 'completahigienizacao.png',
+    'Lavagem + Enceramento' => 'lavagemenceramento.png',
+    'Lavagem Técnica' => 'tecnica.png',
+    'Polimento Técnico' => 'polimentotec.png',
+    'Polimento + Proteção de Pintura' => 'protecaopintura.png',
+    'Detailing Completo' => 'detailing.png',
+];
+
 // Agrupa os serviços por categoria pra exibir em seções
 $servicosPorCategoria = [];
 foreach ($servicos as $servico) {
@@ -48,7 +61,7 @@ include 'includes/header.php';
     <div class="carousel-inner">
         
         <div class="carousel-item active">
-            <img src="https://images.unsplash.com/photo-1520340356584-f9917d1eea6f?auto=format&fit=crop&w=1600&q=80" class="d-block w-100" alt="Lava-rápido profissional" style="height: 450px; object-fit: cover;">
+            <img src="assets/img/carrossel-lavagem.png" class="d-block w-100" alt="Profissional lavando um carro preto com espuma" style="height: auto; aspect-ratio: 3 / 1; object-fit: cover;">
             <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-3 mb-3">
                 <h3 class="fw-bold">Lavagem Completa e Detalhada</h3>
                 <p class="fs-5">Cuidamos do seu veículo com os melhores produtos.</p>
@@ -56,7 +69,7 @@ include 'includes/header.php';
         </div>
 
         <div class="carousel-item">
-            <img src="https://images.unsplash.com/photo-1601362840469-51e4d8d58785?auto=format&fit=crop&w=1600&q=80" class="d-block w-100" alt="Polimento e Espelhamento" style="height: 450px; object-fit: cover;">
+            <img src="assets/img/carrossel-polimento.png" class="d-block w-100" alt="Profissional polindo a pintura de um carro preto" style="height: auto; aspect-ratio: 3 / 1; object-fit: cover;">
             <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-3 mb-3">
                 <h3 class="fw-bold">Polimento e Higienização</h3>
                 <p class="fs-5">Seu carro novo, por dentro e por fora.</p>
@@ -64,7 +77,7 @@ include 'includes/header.php';
         </div>
 
         <div class="carousel-item">
-            <img src="assets/img/lavando1.jpg" class="d-block w-100" alt="Agendamento Prático" style="height: 450px; object-fit: cover;">
+            <img src="assets/img/carrossel-acabamento.png" class="d-block w-100" alt="Profissional finalizando e inspecionando o acabamento de um carro preto" style="height: auto; aspect-ratio: 3 / 1; object-fit: cover;">
             <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-3 mb-3">
                 <h3 class="fw-bold">Agendamento Rápido</h3>
                 <p class="fs-5">Escolha o melhor horario, que cabe na sua agenda.</p>
@@ -105,7 +118,7 @@ include 'includes/header.php';
                         <div class="card h-100 shadow-sm border-0 rounded-4 overflow-hidden card-servico">
                             
                             <img 
-                                src="assets/img/<?php echo !empty($servico['imagem']) ? $servico['imagem'] : 'servico-padrao.jpg'; ?>" 
+                                src="assets/img/<?php echo rawurlencode($imagensServicos[$servico['nome']] ?? (!empty($servico['imagem']) ? $servico['imagem'] : 'servico-padrao.jpg')); ?>"
                                 class="card-img-top img-fluid" 
                                 alt="<?php echo htmlspecialchars($servico['nome']); ?>"
                                 style="height: 200px; object-fit: cover;">
@@ -184,9 +197,9 @@ include 'includes/header.php';
     <div class="row g-4">
         <div class="col-12 col-md-6">
             <h3 class="h5 fw-bold"><i class="bi bi-chat-dots text-primary me-2" aria-hidden="true"></i>Contato</h3>
-            <p class="mb-2">Telefone: (11) 0000-0000</p>
-            <p class="mb-2">E-mail: contato@wincar.example</p>
-            <p class="text-muted mb-0">Contatos fictícios para demonstração.</p>
+            <p class="mb-2">Telefone: (19) 9123-4567</p>
+            <p class="mb-2">E-mail: contato@wincar.com</p>
+            <p class="text-muted mb-0">Contatos fictícios.</p>
         </div>
         <div class="col-12 col-md-6">
             <h3 class="h5 fw-bold"><i class="bi bi-clock text-primary me-2" aria-hidden="true"></i>Horários de agendamento</h3>
