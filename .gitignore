@@ -6,3 +6,5 @@ Thumbs.db
 
 
 *.log
+
+/config/email.local.php

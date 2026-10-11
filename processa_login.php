@@ -8,7 +8,7 @@ require_once 'config/conexao.php';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $email = trim($_POST['email']);
-    $senha = trim($_POST['senha']);
+    $senha = $_POST['senha'] ?? '';
 
     try {
 

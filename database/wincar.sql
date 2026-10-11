@@ -56,6 +56,7 @@ INSERT INTO `agendamento` (`id_agendamento`, `id_cliente`, `id_servico`, `placa`
 -- Estrutura para tabela `cliente`
 --
 
+DROP TABLE IF EXISTS `recuperacao_senha`;
 DROP TABLE IF EXISTS `cliente`;
 CREATE TABLE IF NOT EXISTS `cliente` (
   `id_cliente` int NOT NULL AUTO_INCREMENT,
@@ -150,6 +151,15 @@ ALTER TABLE `agendamento`
 --
 ALTER TABLE `veiculo`
   ADD CONSTRAINT `veiculo_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id_cliente`);
+CREATE TABLE IF NOT EXISTS recuperacao_senha (
+  id_cliente INT NOT NULL PRIMARY KEY,
+  token_hash CHAR(64) NOT NULL UNIQUE,
+  solicitado_em DATETIME NOT NULL,
+  expira_em DATETIME NOT NULL,
+  usado_em DATETIME NULL,
+  CONSTRAINT fk_recuperacao_cliente FOREIGN KEY (id_cliente)
+    REFERENCES cliente(id_cliente) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

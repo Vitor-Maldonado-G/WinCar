@@ -42,6 +42,10 @@
 
                 </form>
 
+                <p class="text-center mt-3 mb-0">
+                    <a href="recuperar-senha.php" class="text-white text-decoration-underline">Esqueci minha senha</a>
+                </p>
+
                 <hr class="my-4 border-light">
 
                 <p class="text-center mb-0">
