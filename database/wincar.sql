@@ -100,15 +100,15 @@ CREATE TABLE IF NOT EXISTS `servico` (
 --
 
 INSERT INTO `servico` (`id_servico`, `nome`, `descricao`, `preco`, `duracao`, `categoria`, `imagem`) VALUES
-(1, 'Lavagem Externa', 'Lavagem da carroceria, rodas e pneus.', '35.00', 45, 'Simples', 'lavando1.jpg'),
-(2, 'Lavagem + Aspiração', 'Lavagem externa e aspiração do interior.', '50.00', 60, 'Simples', 'lavando1.jpg'),
-(3, 'Lavagem Completa', 'Externa + aspiração + limpeza básica do painel e vidros.', '65.00', 90, 'Simples', 'lavando2.jpg'),
-(4, 'Lavagem Completa + Higienização Interna', 'Limpeza mais profunda de bancos, carpetes, painel e portas.', '110.00', 150, 'Intermediário', 'lavando2.jpg'),
-(5, 'Lavagem + Enceramento', 'Lavagem completa com aplicação de cera para brilho e proteção.', '120.00', 150, 'Intermediário', 'lavando2.jpg'),
-(6, 'Lavagem Técnica', 'Limpeza mais detalhada da carroceria, rodas, pneus, caixas de roda e interior.', '140.00', 180, 'Intermediário', 'lavagemmotor1.webp'),
-(7, 'Polimento Técnico', 'Tratamento da pintura para recuperar brilho e reduzir riscos e marcas leves.', '220.00', 240, 'Premium', 'polimento1.jpg'),
-(8, 'Polimento + Proteção de Pintura', 'Polimento técnico seguido de selante ou proteção cerâmica.', '320.00', 300, 'Premium', 'polimento1.jpg'),
-(9, 'Detailing Completo', 'Limpeza e detalhamento minucioso do interior e exterior, incluindo pintura, rodas, vidros, plásticos e acabamento.', '380.00', 360, 'Premium', 'polimento1.jpg');
+(1, 'Lavagem Externa', 'Lavagem da carroceria, rodas e pneus.', '35.00', 45, 'Simples', 'externa.png'),
+(2, 'Lavagem + Aspiração', 'Lavagem externa e aspiração do interior.', '50.00', 60, 'Simples', 'externaaspiração.png'),
+(3, 'Lavagem Completa', 'Externa + aspiração + limpeza básica do painel e vidros.', '65.00', 90, 'Simples', 'completa.png'),
+(4, 'Lavagem Completa + Higienização Interna', 'Limpeza mais profunda de bancos, carpetes, painel e portas.', '110.00', 150, 'Intermediário', 'completahigienizacao.png'),
+(5, 'Lavagem + Enceramento', 'Lavagem completa com aplicação de cera para brilho e proteção.', '120.00', 150, 'Intermediário', 'lavagemenceramento.png'),
+(6, 'Lavagem Técnica', 'Limpeza mais detalhada da carroceria, rodas, pneus, caixas de roda e interior.', '140.00', 180, 'Intermediário', 'tecnica.png'),
+(7, 'Polimento Técnico', 'Tratamento da pintura para recuperar brilho e reduzir riscos e marcas leves.', '220.00', 240, 'Premium', 'polimentotec.png'),
+(8, 'Polimento + Proteção de Pintura', 'Polimento técnico seguido de selante ou proteção cerâmica.', '320.00', 300, 'Premium', 'protecaopintura.png'),
+(9, 'Detailing Completo', 'Limpeza e detalhamento minucioso do interior e exterior, incluindo pintura, rodas, vidros, plásticos e acabamento.', '380.00', 360, 'Premium', 'detailing.png');
 
 -- --------------------------------------------------------
 

@@ -2,8 +2,13 @@
 session_start();
 
 // Proteção da página: só entra se estiver logado
-if (!isset($_SESSION['usuario_id']) && !isset($_SESSION['usuario_id'])) {
+if (!isset($_SESSION['usuario_id'])) {
     header("Location: login.php");
+    exit();
+}
+
+if (($_SESSION['tipo_usuario'] ?? '') !== 'cliente') {
+    header('Location: index.php');
     exit();
 }
 
@@ -13,7 +18,11 @@ if (empty($_SESSION['csrf_perfil'])) {
     $_SESSION['csrf_perfil'] = bin2hex(random_bytes(32));
 }
 
-$id_cliente = $_SESSION['usuario_id'] ?? $_SESSION['usuario_id'];
+if (empty($_SESSION['csrf_excluir_conta'])) {
+    $_SESSION['csrf_excluir_conta'] = bin2hex(random_bytes(32));
+}
+
+$id_cliente = $_SESSION['usuario_id'];
 
 // 1. Busca os dados cadastrais do cliente
 try {
@@ -189,9 +198,43 @@ include 'includes/header.php';
         </div>
     </div>
 
+    <?php if ($cliente): ?>
+        <div class="mt-4 pt-3 border-top text-end">
+            <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalExcluirConta">
+                <i class="bi bi-trash me-1" aria-hidden="true"></i>Excluir minha conta
+            </button>
+        </div>
+    <?php endif; ?>
 </div>
 
 <?php if ($cliente): ?>
+<div class="modal fade" id="modalExcluirConta" tabindex="-1" aria-labelledby="modalExcluirContaLabel" aria-describedby="avisoExcluirConta" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form action="excluir-conta.php" method="POST">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="modalExcluirContaLabel">Excluir minha conta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="avisoExcluirConta">Sua conta, seus dados pessoais, veículos e todos os seus agendamentos serão apagados definitivamente. Os horários reservados ficarão disponíveis novamente.</p>
+                    <p class="text-danger fw-bold">Essa ação não pode ser desfeita.</p>
+                    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_excluir_conta'], ENT_QUOTES, 'UTF-8'); ?>">
+                    <label for="senhaExcluirConta" class="form-label">Confirme sua senha atual</label>
+                    <input type="password" class="form-control" id="senhaExcluirConta" name="senha" autocomplete="current-password" required>
+                    <div class="form-check mt-3">
+                        <input type="checkbox" class="form-check-input" id="confirmarExclusao" name="confirmar_exclusao" value="1" required>
+                        <label class="form-check-label" for="confirmarExclusao">Entendo que minha conta e meus dados serão apagados.</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Excluir definitivamente</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <div class="modal fade" id="modalEditarPerfil" tabindex="-1" aria-labelledby="modalEditarPerfilLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content rounded-4 border-0 shadow">

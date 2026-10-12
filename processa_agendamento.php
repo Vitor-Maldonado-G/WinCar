@@ -65,6 +65,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     try {
+        // Impede que uma sessao antiga agende durante ou depois da exclusao da conta.
+        $conexao->beginTransaction();
+        $stmtConta = $conexao->prepare("SELECT id_cliente FROM cliente WHERE id_cliente = :id AND tipo_usuario = 'cliente' FOR UPDATE");
+        $stmtConta->execute([':id' => $id_cliente]);
+        if (!$stmtConta->fetchColumn()) {
+            $conexao->rollBack();
+            $_SESSION = [];
+            session_regenerate_id(true);
+            emitirMensagem('Sua conta não está disponível. Faça login novamente.', 'warning', 'login.php');
+        }
+
         // 4. Confere se o horário já está ocupado (agendamento ATIVO, não cancelado)
         $sqlCheck = "SELECT COUNT(*) FROM agendamento WHERE data = :data AND hora = :hora AND status != 'Cancelado'";
         $stmtCheck = $conexao->prepare($sqlCheck);
@@ -73,6 +84,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmtCheck->execute();
 
         if ($stmtCheck->fetchColumn() > 0) {
+            $conexao->rollBack();
             emitirMensagem("Este horário já está ocupado, escolha outro.", "danger", "agendar.php");
         }
 
@@ -86,10 +98,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($veiculoExistente) {
             // Placa já existe no sistema — confere de quem é
             if ($veiculoExistente['id_cliente'] != $id_cliente) {
+                $conexao->rollBack();
                 emitirMensagem("Esta placa já está cadastrada em outra conta. Se o veículo mudou de dono, entre em contato com o suporte.", "danger", "agendar.php");
             }
 
             if ($veiculoExistente['modelo'] !== $modelo) {
+                $conexao->rollBack();
                 emitirMensagem("Você já tem essa placa cadastrada como \"" . htmlspecialchars($veiculoExistente['modelo']) . "\". Selecione o modelo correto ou entre em contato com o suporte para corrigir.", "danger", "agendar.php");
             }
             // Placa já é do próprio cliente com o mesmo modelo — segue normal
@@ -117,12 +131,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bindParam(':status', $status);
 
         if ($stmt->execute()) {
+            $conexao->commit();
             emitirMensagem("Agendamento realizado com sucesso!", "success", "painelcliente.php");
         } else {
+            $conexao->rollBack();
             emitirMensagem("Erro ao registrar o agendamento. Tente novamente.", "danger", "agendar.php");
         }
 
     } catch (PDOException $e) {
+        if ($conexao->inTransaction()) {
+            $conexao->rollBack();
+        }
         error_log("Erro ao inserir agendamento: " . $e->getMessage());
         emitirMensagem("Não foi possível registrar o agendamento. Tente novamente em instantes.", "danger", "agendar.php");
     }
